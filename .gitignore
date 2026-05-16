@@ -1,0 +1,38 @@
+node_modules
+.pnpm-store
+dist
+build
+out
+cache
+.next
+.turbo
+coverage
+
+.env
+.env.local
+.env.*.local
+
+contracts/lib
+contracts/out
+contracts/cache
+contracts/broadcast
+contracts/deployments/*.local.json
+
+.DS_Store
+.idea
+.vscode
+
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+apps/relayer/data
+apps/relayer/*.sqlite
+apps/relayer/*.sqlite-*
+
+# Operator-side worker swarm — wallets, repo clones, logs.
+# Never push: keys live here, plus this is operator infrastructure that
+# doesn't belong in the protocol monorepo.
+claudelance worker/
+claudelance-worker/
+**/.claudelance/

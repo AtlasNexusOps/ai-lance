@@ -1,0 +1,84 @@
+name: Publish npm packages
+
+# Tag-driven dual publish to npmjs.com and GitHub Packages.
+#
+# Trigger: push a tag of the form `pkg-v<semver>` (matches the package
+# version field). Example:
+#
+#   pnpm --filter @yeheskieltame/claudelance-types version patch
+#   git tag pkg-v0.1.1
+#   git push origin pkg-v0.1.1
+#
+# The workflow builds every package in the workspace and publishes
+# anything whose package.json version matches the tag. Repeating the
+# tag is a no-op (npm rejects duplicate versions).
+
+on:
+  push:
+    tags:
+      - 'pkg-v*'
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Workspace filter (e.g. @yeheskieltame/claudelance-sdk). Leave blank to publish all.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        # version comes from "packageManager" in the root package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@yeheskieltame'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm -r --filter "./packages/*" run build
+
+      - name: Publish to npmjs.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "${{ inputs.package }}" ]; then
+            pnpm --filter "${{ inputs.package }}" publish --access public --no-git-checks --provenance
+          else
+            pnpm -r --filter "./packages/*" publish --access public --no-git-checks --provenance
+          fi
+
+      - name: Rewrite .npmrc for GitHub Packages
+        # setup-node above wrote a scope binding to registry.npmjs.org;
+        # pnpm prioritises that scope binding over --registry, so we have
+        # to OVERWRITE the .npmrc, not append.
+        run: |
+          NPMRC="${RUNNER_TEMP}/.npmrc"
+          {
+            echo "@yeheskieltame:registry=https://npm.pkg.github.com"
+            echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}"
+          } > "$NPMRC"
+          echo "NPM_CONFIG_USERCONFIG=$NPMRC" >> "$GITHUB_ENV"
+
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "${{ inputs.package }}" ]; then
+            pnpm --filter "${{ inputs.package }}" publish --access public --no-git-checks
+          else
+            pnpm -r --filter "./packages/*" publish --access public --no-git-checks
+          fi

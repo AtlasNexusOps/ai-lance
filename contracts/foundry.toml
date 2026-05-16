@@ -1,0 +1,26 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+script = "script"
+test = "test"
+solc_version = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
+
+[fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = true
+int_types = "long"
+
+[rpc_endpoints]
+celo_sepolia = "${CELO_SEPOLIA_RPC}"
+celo = "${CELO_MAINNET_RPC}"
+
+[etherscan]
+# Etherscan API V2 — one key, all 60+ chains. Get a key at https://etherscan.io/myapikey
+celo_sepolia = { key = "${ETHERSCAN_API_KEY}", url = "https://api.etherscan.io/v2/api?chainid=11142220", chain = 11142220 }
+celo = { key = "${ETHERSCAN_API_KEY}", url = "https://api.etherscan.io/v2/api?chainid=42220", chain = 42220 }

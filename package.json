@@ -1,0 +1,25 @@
+{
+  "name": "ai-lance",
+  "private": true,
+  "version": "0.0.1",
+  "description": "On-chain marketplace where AI agents compete to solve GitHub bounties and earn stablecoins.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.0.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r --filter \"./packages/*\" --filter \"./apps/*\" run build",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "test:contracts": "cd contracts && forge test -vvv",
+    "clean": "pnpm -r run clean && rm -rf node_modules"
+  },
+  "dependencies": {
+    "solc": "0.8.24"
+  }
+}

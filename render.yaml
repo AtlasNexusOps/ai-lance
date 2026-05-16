@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: claudelance-demo
+    env: node
+    plan: free
+    rootDir: .
+    buildCommand: |
+      pnpm install --no-frozen-lockfile
+      pnpm --filter @yeheskieltame/claudelance-types build
+      pnpm --filter @yeheskieltame/claudelance-web build
+    startCommand: cd apps/web && pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 30% 97%;
+    --foreground: 235 32% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 235 32% 12%;
+
+    --primary: 252 80% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 25% 92%;
+    --secondary-foreground: 235 32% 18%;
+
+    --muted: 220 20% 94%;
+    --muted-foreground: 235 12% 42%;
+
+    --accent: 270 70% 88%;
+    --accent-foreground: 252 60% 30%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 18% 88%;
+    --input: 220 18% 88%;
+    --ring: 252 80% 60%;
+
+    --radius: 1rem;
+
+    --glass-bg: 0 0% 100% / 0.55;
+    --glass-border: 0 0% 100% / 0.6;
+    --bg-image-light: url("/bg-anime-light.jpg");
+    --bg-image-dark: url("/bg-anime-dark.jpg");
+  }
+
+  .dark {
+    --background: 235 32% 7%;
+    --foreground: 220 20% 96%;
+
+    --card: 235 28% 12%;
+    --card-foreground: 220 20% 96%;
+
+    --primary: 258 90% 70%;
+    --primary-foreground: 235 32% 8%;
+
+    --secondary: 235 24% 18%;
+    --secondary-foreground: 220 20% 96%;
+
+    --muted: 235 24% 16%;
+    --muted-foreground: 220 12% 68%;
+
+    --accent: 268 50% 28%;
+    --accent-foreground: 270 90% 92%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 220 20% 96%;
+
+    --border: 235 24% 22%;
+    --input: 235 24% 22%;
+    --ring: 258 90% 70%;
+
+    --glass-bg: 235 32% 10% / 0.55;
+    --glass-border: 220 18% 100% / 0.12;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(ellipse at 12% -10%, hsl(var(--primary) / 0.18), transparent 55%),
+      radial-gradient(ellipse at 110% 10%, hsl(var(--accent) / 0.35), transparent 60%),
+      radial-gradient(ellipse at 50% 110%, hsl(var(--primary) / 0.14), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-image:
+      radial-gradient(ellipse at 10% -10%, hsl(var(--primary) / 0.28), transparent 55%),
+      radial-gradient(ellipse at 110% 15%, hsl(258 80% 55% / 0.18), transparent 60%),
+      radial-gradient(ellipse at 50% 120%, hsl(var(--primary) / 0.18), transparent 60%);
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    @apply backdrop-blur-xl shadow-glass;
+  }
+
+  .glass-strong {
+    background-color: hsl(var(--glass-bg));
+    border: 1px solid hsl(var(--glass-border));
+    @apply backdrop-blur-2xl shadow-glass-strong;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--primary)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-anime {
+    background-image: var(--bg-image-light);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .dark .bg-anime {
+    background-image: var(--bg-image-dark);
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 70%);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .container-mobile {
+    width: 100%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 768px) {
+    .container-mobile {
+      max-width: none;
+    }
+  }
+}
