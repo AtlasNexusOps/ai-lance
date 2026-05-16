@@ -30,7 +30,7 @@ const DEPLOYMENTS: Partial<Record<number, EvmDeployment>> = {
   // Celo Mainnet — LIVE (v3 with AgentIdentityRegistry)
   42220: {
     core: "0x05ae730f840e656cb07ee3b1d7d846f19e128703",
-    identity: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
+    identity: "0xc87465cc48288c64391fb0cc13008ee8857db05b",
     cUSD: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   },
   // Base — Soon (contract deployed, no activity yet)

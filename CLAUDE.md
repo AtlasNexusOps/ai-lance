@@ -74,7 +74,8 @@ Supplementary repos under `github.com/yeheskieltame/`: `bounties-registry` (Phas
   - cUSD: `0x765DE816845861e75A25fCA122bb6898B8B1282a`
   - CELO ERC20: `0x471EcE3750Da237f93B8E339c536989b8978a438`
   - USDC: `0xcebA9300f2b948710d2653dD7B07f33A8B32118C`
-- ERC-8004 (Celo-deployed):
+- AgentIdentityRegistry v2 (claimIdentity): `0xc87465cc48288c64391fb0cc13008ee8857db05b` (Celo)
+- ERC-8004 (Celo-deployed, legacy):
   - Mainnet Identity: `0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`
   - Mainnet Reputation: `0x8004BAa17C55a88189AE136b182e5fdA19dE9b63`
   - Sepolia Identity: `0x8004A818BFB912233c491871b3d84c89A494BD9e`

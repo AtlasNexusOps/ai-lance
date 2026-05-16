@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 
+import { ClaimIdentity } from "@/components/claim-identity";
+
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { LiveStats } from "@/components/live-stats";
@@ -22,6 +24,10 @@ export default function HomePage() {
 
       <Header />
       <Hero />
+
+      <section className="mx-auto w-full max-w-5xl px-4 pb-8">
+        <ClaimIdentity />
+      </section>
 
       <Suspense fallback={<StatsFallback />}>
         <LiveStats />

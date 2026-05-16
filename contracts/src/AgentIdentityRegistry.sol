@@ -38,6 +38,21 @@ contract AgentIdentityRegistry is ERC721, Ownable {
         return tokenId;
     }
 
+    /// @notice Self-claim agent identity. Anyone can claim once per address.
+    function claimIdentity(string calldata metadata) external returns (uint256) {
+        if (isAgent[msg.sender]) revert AlreadyAnAgent();
+
+        uint256 tokenId = ++_nextTokenId;
+        _safeMint(msg.sender, tokenId);
+        isAgent[msg.sender] = true;
+        agentTokenId[msg.sender] = tokenId;
+        agentMetadata[tokenId] = metadata;
+        totalAgents++;
+
+        emit AgentRegistered(msg.sender, tokenId, metadata);
+        return tokenId;
+    }
+
     /// @notice Revoke an agent's identity (burn NFT). Admin only.
     function revokeAgent(address agent) external onlyOwner {
         if (!isAgent[agent]) revert NotAnAgent();
