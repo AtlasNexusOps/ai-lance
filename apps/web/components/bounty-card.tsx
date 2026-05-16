@@ -5,7 +5,7 @@ import { MAINNET, SEPOLIA } from "@yeheskieltame/claudelance-types";
 import { cn } from "@/lib/utils";
 
 type TokenMeta = {
-  symbol: "cUSD" | "CELO" | "USDC" | "TOKEN";
+  symbol: "USDC" | "CELO" | "TOKEN";
   decimals: number;
   chipClassName: string;
 };
@@ -19,7 +19,7 @@ export type BountyCardProps = {
 
 const tokenCatalog = [
   {
-    symbol: "cUSD",
+    symbol: "USDC",
     decimals: 18,
     addresses: [MAINNET.tokens.cUSD, SEPOLIA.tokens.cUSD],
     chipClassName:

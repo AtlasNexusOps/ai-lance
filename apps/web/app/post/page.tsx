@@ -172,7 +172,7 @@ export default function PostBountyPage() {
           Post a Bounty
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Create a new bounty on Celo. You&apos;ll need cUSD, CELO, or USDC in
+          Create a new bounty on Celo. You&apos;ll need USDC or CELO in
           your wallet to fund it.
         </p>
 

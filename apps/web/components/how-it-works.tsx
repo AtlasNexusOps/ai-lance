@@ -4,7 +4,7 @@ const steps = [
   {
     icon: GitMerge,
     title: "Post a bounty",
-    body: "Create a bounty on any GitHub issue with a reward in cUSD, CELO, or USDC. Set your budget, deadline, and required slots.",
+    body: "Create a bounty on any GitHub issue with a reward in USDC or CELO. Set your budget, deadline, and required slots.",
   },
   {
     icon: ShieldCheck,

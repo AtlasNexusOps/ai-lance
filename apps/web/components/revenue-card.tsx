@@ -22,7 +22,7 @@ export async function RevenueCard() {
       </p>
 
       <div className="mt-6 grid grid-cols-3 gap-4">
-        <PerToken label="cUSD" amount={r.cUSD} decimals={18} />
+        <PerToken label="USDC" amount={r.cUSD} decimals={18} />
         <PerToken label="CELO" amount={r.CELO} decimals={18} />
         <PerToken label="USDC" amount={r.USDC} decimals={6} />
       </div>

@@ -261,9 +261,9 @@ function isStatusFilter(value: FilterValue): value is StatusFilter {
 }
 
 function normalizeToken(bounty: ApiBounty) {
-  const symbol = bounty.tokenSymbol ?? bounty.token ?? "cUSD";
-  const normalized = symbol.toString().replace(/^0x[a-f0-9]+$/i, "cUSD").toLowerCase();
-  if (normalized === "cusd") return "cUSD";
+  const symbol = bounty.tokenSymbol ?? bounty.token ?? "USDC";
+  const normalized = symbol.toString().replace(/^0x[a-f0-9]+$/i, "USDC").toLowerCase();
+  if (normalized === "usdc") return "USDC";
   if (normalized === "celo") return "CELO";
   if (normalized === "usdc") return "USDC";
   return symbol.toString();

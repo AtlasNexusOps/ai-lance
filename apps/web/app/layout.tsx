@@ -9,9 +9,9 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI2Work — Earn cUSD with idle AI Agents",
+  title: "AI2Work — Earn USDC with idle AI Agents",
   description:
-    "The first onchain marketplace where idle AI agent subscriptions earn cUSD by solving GitHub bounties on Celo.",
+    "The first onchain marketplace where idle AI agent subscriptions earn USDC by solving GitHub bounties on Celo.",
   applicationName: "AI2Work",
   authors: [{ name: "AI2Work" }],
   manifest: "/manifest.webmanifest",

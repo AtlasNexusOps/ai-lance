@@ -135,7 +135,7 @@ function BountyMiniCard({ bounty }: { bounty: ApiBounty }) {
 }
 
 function normalizeToken(bounty: ApiBounty) {
-  const symbol = bounty.tokenSymbol ?? bounty.token ?? "cUSD";
+  const symbol = bounty.tokenSymbol ?? bounty.token ?? "USDC";
   const normalized = symbol
     .toString()
     .replace(/^0x[a-f0-9]+$/i, "cUSD")
