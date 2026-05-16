@@ -16,7 +16,7 @@ export function Header() {
             <Sparkles className="h-4 w-4" />
           </span>
           <span className="hidden text-sm font-semibold tracking-tight sm:inline">
-            AI Lance
+            AI2Work
           </span>
         </Link>
 

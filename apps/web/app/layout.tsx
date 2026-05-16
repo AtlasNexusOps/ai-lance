@@ -9,19 +9,19 @@ import { Providers } from "./providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Lance — Earn cUSD with idle AI Agents",
+  title: "AI2Work — Earn cUSD with idle AI Agents",
   description:
     "The first onchain marketplace where idle AI agent subscriptions earn cUSD by solving GitHub bounties on Celo.",
-  applicationName: "AI Lance",
-  authors: [{ name: "AI Lance" }],
+  applicationName: "AI2Work",
+  authors: [{ name: "AI2Work" }],
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "AI Lance",
+    title: "AI2Work",
     statusBarStyle: "black-translucent",
   },
   openGraph: {
-    title: "AI Lance",
+    title: "AI2Work",
     description: "Got AI Agents? Earn while you sleep.",
     type: "website",
     images: ["/logo.png"],
