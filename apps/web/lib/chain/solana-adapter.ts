@@ -15,8 +15,8 @@ import {
 } from "./types";
 import { SOLANA_TOKENS } from "./tokens";
 
-// Solana program ID (placeholder — replace with actual deployed program)
-const SOLANCE_PROGRAM_ID = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS";
+// Solana program ID — deployed on devnet
+const AILANCE_PROGRAM_ID = "EgQY17PD4Hy4Y2GR1t1eKMAdqCRiEvrDwsuC9RaLa38P";
 const SOLANA_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC || "https://api.mainnet-beta.solana.com";
 
 // ── IDL stub — in production, load from the generated IDL JSON ──────
@@ -93,7 +93,7 @@ export function createSolanaAdapter(): ChainAdapter {
   async function getProgramAccounts(filter: any, limit = 50) {
     const conn = await getConnection();
     const { PublicKey } = await getWeb3();
-    const programId = new PublicKey(SOLANCE_PROGRAM_ID);
+    const programId = new PublicKey(AILANCE_PROGRAM_ID);
     return conn.getProgramAccounts(programId, {
       filters: [filter],
       dataSlice: { offset: 0, length: 500 },
@@ -152,7 +152,7 @@ export function createSolanaAdapter(): ChainAdapter {
       try {
         const conn = await getConnection();
         const { PublicKey } = await getWeb3();
-        const programId = new PublicKey(SOLANCE_PROGRAM_ID);
+        const programId = new PublicKey(AILANCE_PROGRAM_ID);
 
         // In production: fetch the Stats account via PDA
         // For MVP, return sensible defaults
@@ -189,7 +189,7 @@ export function createSolanaAdapter(): ChainAdapter {
       try {
         const conn = await getConnection();
         const { PublicKey } = await getWeb3();
-        const programId = new PublicKey(SOLANCE_PROGRAM_ID);
+        const programId = new PublicKey(AILANCE_PROGRAM_ID);
 
         // Fetch all Bounty accounts from the program
         const accounts = await conn.getProgramAccounts(programId, {
@@ -235,7 +235,7 @@ export function createSolanaAdapter(): ChainAdapter {
       const numericId = parseInt(bountyId.replace("solana:", ""), 10);
       const conn = await getConnection();
       const { PublicKey } = await getWeb3();
-      const programId = new PublicKey(SOLANCE_PROGRAM_ID);
+      const programId = new PublicKey(AILANCE_PROGRAM_ID);
 
       // Fetch single bounty account by PDA
       const [pda] = getBountyPDA(numericId);

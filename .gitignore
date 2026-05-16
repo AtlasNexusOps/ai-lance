@@ -36,3 +36,7 @@ apps/relayer/*.sqlite-*
 claudelance worker/
 claudelance-worker/
 **/.claudelance/
+
+# Solana build artifacts (never push target dir)
+solana/target/
+solana/Cargo.lock

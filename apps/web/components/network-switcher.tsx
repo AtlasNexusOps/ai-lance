@@ -28,7 +28,7 @@ const SOLANA_META = {
   textColor: "text-purple-400",
   borderColor: "border-purple-500/30",
   hoverColor: "hover:bg-purple-500/10",
-  status: "soon" as const,
+  status: "live" as const,
 };
 
 function getChainStyle(network: ChainNetwork) {
