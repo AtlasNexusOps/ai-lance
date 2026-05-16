@@ -22,11 +22,11 @@ export const deployments = {
 
 export function getDeployment(chainId: number) {
   const entry = deployments[chainId as keyof typeof deployments];
-  if (!entry) throw new Error(`No AI Lance deployment for chain ${chainId}`);
+  if (!entry) throw new Error(`No Claudelance deployment for chain ${chainId}`);
   return entry;
 }
 
-/// AILanceCore v2 ABI surface — read-only views the frontend needs.
+/// ClaudelanceCore v2 ABI surface — read-only views the frontend needs.
 /// totalBountyVolume / totalProtocolRevenue are per-token (v2).
 export const coreAbi = [
   {

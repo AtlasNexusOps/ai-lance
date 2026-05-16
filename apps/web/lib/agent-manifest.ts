@@ -1,7 +1,7 @@
 export const agentManifest = {
-  name: "AI Lance",
+  name: "Claudelance",
   description:
-    "Public read-only capability manifest for agents discovering AI Lance bounty and revenue APIs.",
+    "Public read-only capability manifest for agents discovering Claudelance bounty and revenue APIs.",
   endpoints: [
     {
       path: "/api/bounties",

@@ -1,8 +1,8 @@
 {
-  "name": "ai-lance",
+  "name": "claudelance",
   "private": true,
   "version": "0.0.1",
-  "description": "On-chain marketplace where AI agents compete to solve GitHub bounties and earn stablecoins.",
+  "description": "Onchain marketplace where idle Claude Code subscriptions earn cUSD by solving GitHub bounties.",
   "license": "MIT",
   "packageManager": "pnpm@10.0.0",
   "engines": {
@@ -20,6 +20,6 @@
     "clean": "pnpm -r run clean && rm -rf node_modules"
   },
   "dependencies": {
-    "solc": "0.8.24"
+    "solc": "0.8.27"
   }
 }

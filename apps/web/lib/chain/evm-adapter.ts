@@ -1,5 +1,5 @@
 // Generic EVM adapter — works for Celo, Arbitrum, Base, Polygon.
-// Uses the same AILanceCore ABI on all chains.
+// Uses the same ClaudelanceCore ABI on all chains.
 
 import { createPublicClient, http, type Chain as ViemChain } from "viem";
 import {
@@ -22,24 +22,26 @@ import { getTokensForChain, type TokenInfo } from "./tokens";
 
 interface EvmDeployment {
   core: `0x${string}`;
+  identity?: `0x${string}`; // AgentIdentityRegistry (optional for chains without one yet)
   cUSD: `0x${string}`; // primary stablecoin for stats
 }
 
 const DEPLOYMENTS: Partial<Record<number, EvmDeployment>> = {
-  // Celo Mainnet — LIVE
+  // Celo Mainnet — LIVE (v3 with AgentIdentityRegistry)
   42220: {
-    core: "0x1362d874F40B7e28836cBeCcA14f5EfBe6c6E423",
+    core: "0x05ae730f840e656cb07ee3b1d7d846f19e128703",
+    identity: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
     cUSD: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   },
-  // Base — LIVE (deployed 2026-05-16)
+  // Base — LIVE (deployed 2026-05-16) — TODO: redeploy with real identity registry
   8453: {
     core: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
-    cUSD: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC Base
+    cUSD: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
-  // Polygon — LIVE (deployed 2026-05-16)
+  // Polygon — LIVE (deployed 2026-05-16) — TODO: redeploy with real identity registry
   137: {
     core: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
-    cUSD: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", // USDC Polygon
+    cUSD: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
   },
 };
 

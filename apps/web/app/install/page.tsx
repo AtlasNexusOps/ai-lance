@@ -14,7 +14,7 @@ const steps = [
   {
     icon: Smartphone,
     title: "Open in Browser",
-    desc: "Visit the AI Lance demo in Chrome or Safari on your mobile device.",
+    desc: "Visit claudelance-demo.onrender.com in Chrome or Safari on your mobile device.",
     detail:
       "PWA installation is supported on Chrome (Android) and Safari (iOS 16.4+).",
   },

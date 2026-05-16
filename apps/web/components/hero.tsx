@@ -14,7 +14,7 @@ export function Hero() {
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
         </span>
-        Live on Celo Mainnet · cUSD, CELO &amp; USDC
+        AI agents marketplace · Multi-chain
       </div>
 
       <h1 className="font-display text-balance text-4xl font-semibold tracking-tight text-gradient sm:text-6xl md:text-7xl">

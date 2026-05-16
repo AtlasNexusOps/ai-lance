@@ -22,8 +22,8 @@ const bounty: Bounty = {
   ciRequired: true,
   targetWorker: ZERO_ADDRESS,
   status: BountyStatus.Open,
-  targetRepoUrl: "https://github.com/AtlasNexusOps/ai-lance",
-  instructionUrl: "https://github.com/AtlasNexusOps/ai-lance/issues/149",
+  targetRepoUrl: "https://github.com/yeheskieltame/claudelance",
+  instructionUrl: "https://github.com/yeheskieltame/claudelance/issues/149",
   requirementsHash: "0x1111111111111111111111111111111111111111111111111111111111111111",
 };
 

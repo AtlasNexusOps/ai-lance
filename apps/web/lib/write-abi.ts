@@ -1,4 +1,4 @@
-/// Write-side ABI for AILanceCore v2 — poster + worker + admin functions.
+/// Write-side ABI for ClaudelanceCore v2 — poster + worker + admin functions.
 export const coreWriteAbi = [
   // ── Poster ──
   {

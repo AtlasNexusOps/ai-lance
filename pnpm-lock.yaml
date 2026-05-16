@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       solc:
-        specifier: 0.8.24
-        version: 0.8.24
+        specifier: 0.8.27
+        version: 0.8.27
 
   apps/web:
     dependencies:
@@ -6207,8 +6207,8 @@ packages:
     resolution: {integrity: sha512-LJhUYUvItdQ0LkJTmPeaEObWXAqFyfmP85x0tch/ez9cahmhlBBLbIqDFnvBnUJGagb0JbIQrkBs1wJ+yRYpEw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
 
-  solc@0.8.24:
-    resolution: {integrity: sha512-G5yUqjTUPc8Np74sCFwfsevhBPlUifUOfhYrgyu6CmYlC6feSw0YS6eZW47XDT23k3JYdKx5nJ+Q7whCEmNcoA==}
+  solc@0.8.27:
+    resolution: {integrity: sha512-BNxMol2tUAbkH7HKlXBcBqrGi2aqgv+uMHz26mJyTtlVgWmBA4ktiw0qVKHfkjf2oaHbwtbtaSeE2dhn/gTAKw==}
     engines: {node: '>=10.0.0'}
     hasBin: true
 
@@ -16556,7 +16556,7 @@ snapshots:
       ip-address: 10.2.0
       smart-buffer: 4.2.0
 
-  solc@0.8.24:
+  solc@0.8.27:
     dependencies:
       command-exists: 1.2.9
       commander: 8.3.0

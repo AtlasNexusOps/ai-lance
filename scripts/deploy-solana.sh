@@ -2,7 +2,7 @@
 # =============================================================================
 # AI Lance — Solana Program Deployment (Anchor)
 # =============================================================================
-# Compile et déploie a Lance-core sur Solana devnet/mainnet.
+# Compile et déploie solance-core sur Solana devnet/mainnet.
 #
 # PRÉREQUIS :
 #   1. Solana CLI  : sh -c "$(curl -sSfL https://release.anza.xyz/v2.1.0/install)"
@@ -85,33 +85,33 @@ cd "$SOLANA_DIR"
 
 anchor build 2>&1 | tail -5
 
-if [ ! -f "target/deploy/ailance_core.so" ]; then
+if [ ! -f "target/deploy/solance_core.so" ]; then
     echo -e "${RED}❌ Échec de la compilation.${NC}"
     exit 1
 fi
-echo -e "${GREEN}✓ Compilation OK${NC}"
+echo -e "${GREEN}✓ Compilation OK$(NC}"
 
 # ── Récupérer le Program ID ────────────────────────────────────────
 
-PROGRAM_ID=$(solana address -k "target/deploy/ailance_core-keypair.json" 2>/dev/null || echo "")
+PROGRAM_ID=$(solana address -k "target/deploy/solance_core-keypair.json" 2>/dev/null || echo "")
 if [ -z "$PROGRAM_ID" ]; then
     echo -e "${YELLOW}Génération d'une nouvelle keypair...${NC}"
-    solana-keygen new -o "target/deploy/ailance_core-keypair.json" --no-bip39-passphrase --force
-    PROGRAM_ID=$(solana address -k "target/deploy/ailance_core-keypair.json")
+    solana-keygen new -o "target/deploy/solance_core-keypair.json" --no-bip39-passphrase --force
+    PROGRAM_ID=$(solana address -k "target/deploy/solance_core-keypair.json")
 fi
 echo -e "${YELLOW}Program ID: ${PROGRAM_ID}${NC}"
 
 # Mettre à jour le program ID dans lib.rs et Anchor.toml
-if [ -f "programs/ailance-core/src/lib.rs" ]; then
-    OLD_ID=$(grep "declare_id!" programs/ailance-core/src/lib.rs | grep -oP '"\K[^"]+' || echo "")
+if [ -f "programs/solance-core/src/lib.rs" ]; then
+    OLD_ID=$(grep "declare_id!" programs/solance-core/src/lib.rs | grep -oP '"\K[^"]+' || echo "")
     if [ -n "$OLD_ID" ] && [ "$OLD_ID" != "$PROGRAM_ID" ]; then
-        sed -i "s/declare_id!(\"$OLD_ID\")/declare_id!(\"$PROGRAM_ID\")/" programs/ailance-core/src/lib.rs
+        sed -i "s/declare_id!(\"$OLD_ID\")/declare_id!(\"$PROGRAM_ID\")/" programs/solance-core/src/lib.rs
         echo -e "${YELLOW}✓ Program ID mis à jour dans lib.rs${NC}"
     fi
 fi
 
 if [ -f "Anchor.toml" ]; then
-    sed -i "s/ailance_core = \".*\"/ailance_core = \"$PROGRAM_ID\"/" Anchor.toml
+    sed -i "s/solance_core = \".*\"/solance_core = \"$PROGRAM_ID\"/" Anchor.toml
     echo -e "${YELLOW}✓ Program ID mis à jour dans Anchor.toml${NC}"
 fi
 
@@ -131,6 +131,7 @@ echo -e "${GREEN}✓ Programme déployé !${NC}"
 
 echo -e "\n${BLUE}[3/3] Initialisation des comptes...${NC}"
 
+# Créer le compte Stats (PDA)
 echo -e "${YELLOW}Création du compte Stats...${NC}"
 # La création des PDAs se fait automatiquement lors du premier appel à chaque instruction.
 # Pour le MVP, le compte Stats sera créé lors du premier postBounty.
@@ -146,4 +147,4 @@ echo "  Network:     ${NETWORK}"
 echo "  Explorer:    https://explorer.solana.com/address/${PROGRAM_ID}?cluster=${NETWORK}"
 echo ""
 echo "Prochaine étape : renseigner le Program ID dans :"
-echo "  apps/web/lib/chain/solana-adapter.ts → AILANCE_PROGRAM_ID"
+echo "  apps/web/lib/chain/solana-adapter.ts → SOLANCE_PROGRAM_ID"
