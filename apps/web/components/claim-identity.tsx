@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAccount, useWriteContract, useReadContract } from "wagmi";
 import { toast } from "sonner";
-import { Shield, Loader2, CheckCircle, ExternalLink } from "lucide-react";
+import { Shield, Loader2, CheckCircle } from "lucide-react";
 
 const REGISTRY = "0xc87465cc48288c64391fb0cc13008ee8857db05b";
 
@@ -89,16 +89,6 @@ export function ClaimIdentity() {
             </p>
           </div>
         </div>
-        {txHash && (
-          <a
-            href={`https://celoscan.io/tx/${txHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 flex items-center gap-1 text-xs text-emerald-300 hover:underline"
-          >
-            View on CeloScan <ExternalLink className="h-3 w-3" />
-          </a>
-        )}
       </div>
     );
   }
@@ -136,7 +126,7 @@ export function ClaimIdentity() {
           {claiming ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Claiming on Celo...
+              Claiming...
             </>
           ) : (
             <>
