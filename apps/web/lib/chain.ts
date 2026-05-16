@@ -82,7 +82,7 @@ export const CHAIN_META: Record<number, ChainMeta> = {
     rpcUrl: "https://mainnet.base.org",
     explorerUrl: "https://basescan.org",
     nativeSymbol: "ETH",
-    status: "live",
+    status: "soon",
   },
   [polygonMainnet.id]: {
     id: polygonMainnet.id,
@@ -95,6 +95,6 @@ export const CHAIN_META: Record<number, ChainMeta> = {
     rpcUrl: "https://polygon-bor-rpc.publicnode.com",
     explorerUrl: "https://polygonscan.com",
     nativeSymbol: "MATIC",
-    status: "live",
+    status: "soon",
   },
 } as const;

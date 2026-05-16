@@ -33,12 +33,12 @@ const DEPLOYMENTS: Partial<Record<number, EvmDeployment>> = {
     identity: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
     cUSD: "0x765DE816845861e75A25fCA122bb6898B8B1282a",
   },
-  // Base — LIVE (deployed 2026-05-16) — TODO: redeploy with real identity registry
+  // Base — Soon (contract deployed, no activity yet)
   8453: {
     core: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
     cUSD: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
-  // Polygon — LIVE (deployed 2026-05-16) — TODO: redeploy with real identity registry
+  // Polygon — Soon (contract deployed, no activity yet)
   137: {
     core: "0xd765e82f50ea8a03e72405c5ecc133a94a46b067",
     cUSD: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
