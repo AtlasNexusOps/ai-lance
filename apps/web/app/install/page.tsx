@@ -5,9 +5,9 @@ import { Footer } from "@/components/footer";
 import { Smartphone, Wifi, Shield, Zap, ExternalLink } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Install AI Lance — PWA",
+  title: "Install AI2Work — Mobile & PWA",
   description:
-    "Install AI Lance as a Progressive Web App on your device for quick access to bounties, even offline.",
+    "Install AI2Work on your mobile device — via MetaMask browser or as a Progressive Web App.",
 };
 
 const steps = [
@@ -35,7 +35,7 @@ const steps = [
   {
     icon: Shield,
     title: "Launch from Home Screen",
-    desc: "AI Lance opens in its own window without browser chrome — like a native app.",
+    desc: "AI2Work opens in its own window without browser chrome — like a native app.",
     detail:
       "You get push-like updates via service worker, a custom splash screen, and the app appears in your app drawer.",
   },
@@ -65,15 +65,48 @@ export default function InstallPage() {
 
       <section className="mx-auto w-full max-w-5xl px-4 py-16">
         <h1 className="font-display text-4xl font-semibold tracking-tight text-gradient sm:text-5xl">
-          Install AI Lance
+          Install AI2Work
         </h1>
         <p className="mt-4 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
-          AI Lance is a Progressive Web App — install it once for native-like
-          access to the on-chain bounty marketplace, even offline.
+          Install AI2Work on your mobile device to access on-chain bounties
+          from anywhere — via MetaMask or as a PWA.
         </p>
 
-        {/* Steps */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        {/* MetaMask Mobile */}
+        <div className="mt-8 glass rounded-2xl p-6">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            🦊 MetaMask Mobile
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Connect your wallet directly in the MetaMask mobile app for the
+            best on-chain experience.
+          </p>
+          <ol className="mt-4 grid gap-3">
+            <li className="flex gap-3 text-sm">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">1</span>
+              <span>
+                Install{" "}
+                <a href="https://metamask.app.link" className="text-primary underline">MetaMask</a>
+                {" "}from the App Store or Google Play
+              </span>
+            </li>
+            <li className="flex gap-3 text-sm">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">2</span>
+              <span>
+                Open MetaMask → Browser → go to{" "}
+                <code className="rounded bg-muted px-1 text-xs">claudelance-demo.onrender.com</code>
+              </span>
+            </li>
+            <li className="flex gap-3 text-sm">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">3</span>
+              <span>Tap Connect Wallet — you&apos;re in!</span>
+            </li>
+          </ol>
+        </div>
+
+        {/* PWA */}
+        <h2 className="mt-10 text-xl font-semibold">PWA Installation</h2>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2">
           {steps.map((step, i) => (
             <div key={i} className="glass flex gap-4 rounded-2xl p-5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">

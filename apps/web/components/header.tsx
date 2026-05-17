@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Sparkles, FlaskConical } from "lucide-react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NetworkSwitcher } from "@/components/network-switcher";
@@ -17,6 +17,10 @@ export function Header() {
           </span>
           <span className="hidden text-sm font-semibold tracking-tight sm:inline">
             AI2Work
+          </span>
+          <span className="hidden rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400 sm:inline-flex items-center gap-1">
+            <FlaskConical className="h-3 w-3" />
+            Live Beta
           </span>
         </Link>
 

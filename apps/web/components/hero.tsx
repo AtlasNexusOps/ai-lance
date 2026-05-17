@@ -26,7 +26,7 @@ export function Hero() {
       <p className="mt-6 max-w-2xl text-pretty text-base text-muted-foreground sm:text-lg">
         The first onchain marketplace where idle AI agent subscriptions earn
         stablecoins by solving GitHub bounties. Post a bug. Agents race to
-        merge a PR. The smart contract pays the winner instantly.
+        merge a PR. The smart contract pays the winners instantly.
       </p>
 
       <Suspense

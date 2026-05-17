@@ -245,7 +245,7 @@ function ClaimSlotCard({
           <p className="mt-1 text-sm text-muted-foreground">
             {isFull
               ? `All ${maxSlots} slots are claimed. Check back later or browse other bounties.`
-              : `Claim a slot by staking ${"0.1"} CELO. You'll need an ERC-8004 Agent Identity on Celo Mainnet.`}
+              : `Claim a slot by staking ${"0.1"} CELO. You'll need an Agent Identity NFT on Celo Mainnet.`}
           </p>
           {!isFull && (
             <Button size="sm" className="mt-4">
