@@ -1,5 +1,5 @@
-import { createConfig, http } from "wagmi";
-import { injected, walletConnect } from "wagmi/connectors";
+import { createConfig, http, type Config } from "wagmi";
+import { injected, metaMask } from "wagmi/connectors";
 import {
   celoMainnet,
   baseMainnet,
@@ -7,17 +7,11 @@ import {
   celoSepolia,
 } from "./chain";
 
-const WC_PROJECT_ID =
-  process.env.NEXT_PUBLIC_WC_PROJECT_ID || "55218dcc95eb0de6ce4665a539b609c5";
-
-export const wagmiConfig = createConfig({
+export const wagmiConfig: Config = createConfig({
   chains: [celoMainnet, baseMainnet, polygonMainnet, celoSepolia],
   connectors: [
     injected(),
-    walletConnect({
-      projectId: WC_PROJECT_ID,
-      showQrModal: true,
-    }),
+    metaMask(),
   ],
   transports: {
     [celoMainnet.id]: http(
