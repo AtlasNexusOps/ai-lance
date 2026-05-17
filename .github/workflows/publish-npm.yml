@@ -5,7 +5,7 @@ name: Publish npm packages
 # Trigger: push a tag of the form `pkg-v<semver>` (matches the package
 # version field). Example:
 #
-#   pnpm --filter @yeheskieltame/claudelance-types version patch
+#   pnpm --filter @atlasnexusops/ai2work-types version patch
 #   git tag pkg-v0.1.1
 #   git push origin pkg-v0.1.1
 #
@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: 'Workspace filter (e.g. @yeheskieltame/claudelance-sdk). Leave blank to publish all.'
+        description: 'Workspace filter (e.g. @atlasnexusops/ai2work-sdk). Leave blank to publish all.'
         required: false
         type: string
 
@@ -43,7 +43,7 @@ jobs:
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org/'
-          scope: '@yeheskieltame'
+          scope: '@atlasnexusops'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -68,7 +68,7 @@ jobs:
         run: |
           NPMRC="${RUNNER_TEMP}/.npmrc"
           {
-            echo "@yeheskieltame:registry=https://npm.pkg.github.com"
+            echo "@atlasnexusops:registry=https://npm.pkg.github.com"
             echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}"
           } > "$NPMRC"
           echo "NPM_CONFIG_USERCONFIG=$NPMRC" >> "$GITHUB_ENV"
