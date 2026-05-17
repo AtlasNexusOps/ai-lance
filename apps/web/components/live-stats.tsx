@@ -1,10 +1,8 @@
-import { ArrowUpRight, Hammer, Users, Wallet } from "lucide-react";
+import { Hammer, Users, Wallet } from "lucide-react";
 
 import { GlassCard } from "@/components/ui/card";
 import { fetchLiveStats } from "@/lib/stats";
 import { formatCUSD } from "@/lib/utils";
-import { getDeployment } from "@/lib/contracts";
-import { DEFAULT_CHAIN_ID, chainById } from "@/lib/chain";
 
 export const revalidate = 60;
 
@@ -18,28 +16,17 @@ export async function LiveStats() {
     error = e instanceof Error ? e.message : "Unable to read live state.";
   }
 
-  const deployment = getDeployment(DEFAULT_CHAIN_ID);
-  const chain = chainById(DEFAULT_CHAIN_ID);
-
   return (
     <section className="mx-auto w-full max-w-5xl px-4 pb-16">
       <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Marketplace pulse · {chain?.name}
+            Marketplace pulse
           </p>
           <h2 className="mt-1 font-display text-2xl font-semibold tracking-tight">
             Receipts, not promises.
           </h2>
         </div>
-        <a
-          href={`${chain?.blockExplorers?.default.url}/address/${deployment.core}#code`}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
-          View verified contract <ArrowUpRight className="h-3.5 w-3.5" />
-        </a>
       </div>
 
       {error ? (
