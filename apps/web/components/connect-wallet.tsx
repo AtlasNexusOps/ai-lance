@@ -13,11 +13,25 @@ export function ConnectWallet() {
   const [connectError, setConnectError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
 
+function getHelpfulError(rawError: string | undefined): string {
+  if (!rawError) return "";
+  const msg = rawError.toLowerCase();
+  // MetaMask SDK connection errors — guide user to install MetaMask
+  if (
+    msg.includes("metamask") ||
+    msg.includes("provider") ||
+    msg.includes("connector") ||
+    msg.includes("timed out") ||
+    msg.includes("not installed")
+  ) {
+    return "Open MetaMask app to connect. Don't have it? Install from your app store.";
+  }
+  return rawError || "Connection failed.";
+}
+
   useEffect(() => {
     if (wagmiError) {
-      setConnectError(
-        wagmiError.message || "Connection failed."
-      );
+      setConnectError(getHelpfulError(wagmiError.message));
       setConnecting(false);
     }
   }, [wagmiError]);
