@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 
 import { BottomNav } from "@/components/bottom-nav";
 import { InstallPrompt } from "@/components/install-prompt";
+import { ServiceWorkerRegister } from "@/components/service-worker-register";
 
 import { Providers } from "./providers";
 import "./globals.css";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-dvh pb-[calc(5rem+env(safe-area-inset-bottom))] font-sans md:pb-0">
         <Providers>
+          <ServiceWorkerRegister />
           {children}
           <BottomNav />
           <InstallPrompt />

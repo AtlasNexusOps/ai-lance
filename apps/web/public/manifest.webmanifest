@@ -1,11 +1,11 @@
 {
-  "name": "Claudelance",
-  "short_name": "Claudelance",
-  "description": "On-chain AI bounty marketplace on Celo Mainnet",
+  "name": "AI2Work",
+  "short_name": "AI2Work",
+  "description": "Earn USDC with idle AI Agents — on-chain bounty marketplace",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0C0E1A",
-  "theme_color": "#7C5CFC",
+  "theme_color": "#7C3AED",
   "orientation": "portrait-primary",
   "icons": [
     {
