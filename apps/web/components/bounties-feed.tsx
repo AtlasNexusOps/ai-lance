@@ -27,12 +27,34 @@ type ApiBounty = {
   claimedSlots?: number;
   maxSlots?: number;
   ciRequired?: boolean;
+  source?: "onchain" | "github";
+};
+
+type GhBounty = {
+  id: string;
+  title: string;
+  repo: string;
+  url: string;
+  labels: string[];
+  estimatedReward: string;
+  bountyLabel: string | null;
+  createdAt: string;
+  author: string;
+  avatar: string;
+  body: string;
+  source: "github";
 };
 
 type BountiesResponse = {
   items?: ApiBounty[];
   nextCursor?: string | null;
   total?: number;
+};
+
+type GhResponse = {
+  items?: GhBounty[];
+  total?: number;
+  hasMore?: boolean;
 };
 
 const FILTERS: Array<{ label: string; value: FilterValue }> = [
@@ -47,18 +69,22 @@ const TOKEN_STYLES: Record<string, string> = {
   cusd: "bg-emerald-500/12 text-emerald-700 ring-emerald-500/25 dark:text-emerald-300",
   celo: "bg-amber-400/15 text-amber-800 ring-amber-400/30 dark:text-amber-200",
   usdc: "bg-sky-500/12 text-sky-700 ring-sky-500/25 dark:text-sky-300",
+  github: "bg-violet-500/12 text-violet-700 ring-violet-500/25 dark:text-violet-300",
 };
 
 export function BountiesFeed() {
   const [activeFilter, setActiveFilter] = React.useState<FilterValue>("all");
   const [items, setItems] = React.useState<ApiBounty[]>([]);
+  const [ghItems, setGhItems] = React.useState<ApiBounty[]>([]);
   const [nextCursor, setNextCursor] = React.useState<string | null>(null);
   const [total, setTotal] = React.useState<number | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoadingGh, setIsLoadingGh] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const sentinelRef = React.useRef<HTMLDivElement | null>(null);
   const requestIdRef = React.useRef(0);
 
+  // ---- On-chain bounties ----
   const loadPage = React.useCallback(
     async (cursor?: string | null, mode: "replace" | "append" = "replace") => {
       const requestId = ++requestIdRef.current;
@@ -97,9 +123,45 @@ export function BountiesFeed() {
     [activeFilter],
   );
 
+  // ---- GitHub bounties (always shown, unfiltered) ----
+  const loadGitHub = React.useCallback(async () => {
+    setIsLoadingGh(true);
+    try {
+      const res = await fetch("/api/demo/github-bounties?limit=6");
+      const data: GhResponse = await res.json();
+      if (data.items) {
+        setGhItems(
+          data.items.map((gh) => ({
+            id: gh.id,
+            title: gh.title,
+            repo: gh.repo,
+            description: gh.body || "",
+            url: gh.url,
+            token: gh.estimatedReward,
+            tokenSymbol: "github",
+            amount: 0,
+            deadline: gh.createdAt,
+            status: "open",
+            source: "github" as const,
+            instructionUrl: gh.url,
+            claimedSlots: 0,
+            maxSlots: 1,
+            author: gh.author,
+            avatar: gh.avatar,
+          })),
+        );
+      }
+    } catch {
+      // GitHub bounties are bonus content — fail silently
+    } finally {
+      setIsLoadingGh(false);
+    }
+  }, []);
+
   React.useEffect(() => {
     void loadPage(null, "replace");
-  }, [loadPage]);
+    void loadGitHub();
+  }, [loadPage, loadGitHub]);
 
   React.useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -116,6 +178,9 @@ export function BountiesFeed() {
     return () => observer.disconnect();
   }, [isLoading, loadPage, nextCursor]);
 
+  // Merge on-chain + GitHub, GitHub first
+  const allItems = [...ghItems, ...items];
+
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-24 pt-10 sm:pt-14">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -125,7 +190,8 @@ export function BountiesFeed() {
             Browse bounties
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-            Filter live escrowed work by token and status. Scroll to load the next page.
+            Filter live escrowed work by token and status. GitHub bounties are
+            fresh issues (&lt;24h) from across open-source.
           </p>
         </div>
         <Button asChild>
@@ -156,12 +222,12 @@ export function BountiesFeed() {
 
       {error ? <EmptyState message={error} /> : null}
 
-      {!error && items.length === 0 && !isLoading ? (
+      {!error && allItems.length === 0 && !isLoading && !isLoadingGh ? (
         <EmptyState message="No matching bounties yet." />
       ) : null}
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((bounty, index) => (
+        {allItems.map((bounty, index) => (
           <BountyFeedCard key={String(bounty.id ?? index)} bounty={bounty} />
         ))}
       </div>
@@ -175,7 +241,7 @@ export function BountiesFeed() {
         ) : null}
         {!isLoading && items.length > 0 && !nextCursor ? (
           <span className="text-sm text-muted-foreground">
-            {total === null ? "End of feed" : `${items.length} of ${total} bounties loaded`}
+            {total === null ? "End of feed" : `${items.length} of ${total} on-chain bounties loaded`}
           </span>
         ) : null}
       </div>
@@ -184,6 +250,12 @@ export function BountiesFeed() {
 }
 
 function BountyFeedCard({ bounty }: { bounty: ApiBounty }) {
+  const isGitHub = bounty.source === "github";
+
+  if (isGitHub) {
+    return <GitHubBountyCard bounty={bounty} />;
+  }
+
   const token = normalizeToken(bounty);
   const status = normalizeStatus(bounty.status);
   const deadline = formatDeadline(bounty.deadline);
@@ -237,6 +309,64 @@ function BountyFeedCard({ bounty }: { bounty: ApiBounty }) {
         <ExternalLink className="h-4 w-4 transition group-hover:translate-x-0.5" />
       </Link>
     </article>
+  );
+}
+
+function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
+  const reward = bounty.token ?? "TBD";
+  const createdAt = bounty.deadline ? new Date(bounty.deadline) : null;
+  const timeAgo = createdAt ? timeSince(createdAt) : "";
+  const repo = (bounty as any).repo ?? "";
+  const author = (bounty as any).author ?? "";
+  const avatar = (bounty as any).avatar ?? "";
+  const url = (bounty as any).url ?? (bounty as any).instructionUrl ?? "#";
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="group flex min-h-64 flex-col rounded-2xl border border-violet-500/20 bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1", TOKEN_STYLES.github)}>
+          🐙 GitHub
+        </span>
+        {reward !== "TBD" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-300">
+            <Coins className="h-3 w-3" />
+            {reward}
+          </span>
+        ) : null}
+      </div>
+
+      {repo && (
+        <p className="mt-2 text-xs font-medium text-violet-500 dark:text-violet-400">
+          {repo}
+        </p>
+      )}
+
+      <h2 className="mt-1 line-clamp-1 text-lg font-semibold tracking-tight group-hover:text-violet-500 transition-colors">
+        {bounty.title ?? "Untitled"}
+      </h2>
+      <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+        {bounty.description ?? ""}
+      </p>
+
+      <div className="mt-auto flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5">
+          {avatar && (
+            <img src={avatar} alt="" className="h-4 w-4 rounded-full" width={16} height={16} />
+          )}
+          {author}
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <CalendarClock className="h-3 w-3" />
+          {timeAgo}
+        </span>
+        <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+    </a>
   );
 }
 
@@ -307,4 +437,15 @@ function deriveTitle(bounty: ApiBounty) {
 
 function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function timeSince(date: Date): string {
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
