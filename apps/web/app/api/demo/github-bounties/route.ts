@@ -83,7 +83,7 @@ function extractRewardHint(body: string | undefined, labels: string[]): string {
   const rewardRegex =
     /(?:bounty|reward|prize|payout|💰)\s*:?\s*\$?(\d[\d,.]*)\s*(USDC|USD|ETH|CELO)?/i;
   const match = body.match(rewardRegex);
-  if (match) {
+  if (match && match[1]) {
     const amount = match[1].replace(/,/g, "");
     const token = match[2]?.toUpperCase() || "";
     return `${amount} ${token}`.trim();
