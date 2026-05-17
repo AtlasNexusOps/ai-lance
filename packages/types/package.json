@@ -1,5 +1,5 @@
 {
-  "name": "@yeheskieltame/claudelance-types",
+  "name": "@atlasnexus/ai2work-types",
   "version": "0.4.2",
   "description": "TypeScript types, ABI, and deployment addresses for the Claudelance bounty marketplace on Celo.",
   "license": "MIT",
