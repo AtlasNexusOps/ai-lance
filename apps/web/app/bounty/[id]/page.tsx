@@ -142,9 +142,8 @@ function BountyHeader({ bounty }: { bounty: BountyJson }) {
         </a>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         <Stat label="Reward" value={`${formatToken(bounty.amount)} ${token}`} />
-        <Stat label="Stake" value={`${formatToken(bounty.stakeRequired)} CELO`} />
         <Stat
           label="Slots"
           value={`${bounty.claimedSlots}/${bounty.maxSlots}`}
@@ -168,7 +167,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function normalizeTokenSymbol(token: string) {
   const TOKENS: Record<string, string> = {
-    "0x765DE816845861e75A25fCA122bb6898B8B1282a": "cUSD",
+    "0x765DE816845861e75A25fCA122bb6898B8B1282a": "USDC",
     "0x471EcE3750Da237f93B8E339c536989b8978a438": "CELO",
     "0xcebA9300f2b948710d2653dD7B07f33A8B32118C": "USDC",
   };

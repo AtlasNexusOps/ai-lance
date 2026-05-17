@@ -4,7 +4,7 @@ import { tokenToUsd } from "@/lib/usd-conversion";
 export async function RevenueCard() {
   const r = await fetchTreasuryRevenue();
   const usdTotal =
-    tokenToUsd("cUSD", r.cUSD) +
+    tokenToUsd("USDC", r.cUSD) +
     tokenToUsd("CELO", r.CELO) +
     tokenToUsd("USDC", r.USDC);
 

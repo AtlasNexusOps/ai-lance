@@ -38,13 +38,13 @@ export default async function StatsPage() {
     },
     {
       label: "Total Volume (USDC)",
-      value: formatToken(stats.totalBountyVolume, "cUSD"),
+      value: formatToken(stats.totalBountyVolume, "USDC"),
       icon: Coins,
       color: "text-emerald-400",
     },
     {
       label: "Protocol Revenue (USDC)",
-      value: formatToken(stats.totalProtocolRevenue, "cUSD"),
+      value: formatToken(stats.totalProtocolRevenue, "USDC"),
       icon: TrendingUp,
       color: "text-purple-400",
     },

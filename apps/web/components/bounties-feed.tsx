@@ -37,7 +37,6 @@ type BountiesResponse = {
 
 const FILTERS: Array<{ label: string; value: FilterValue }> = [
   { label: "All", value: "all" },
-  { label: "cUSD", value: "cusd" },
   { label: "CELO", value: "celo" },
   { label: "USDC", value: "usdc" },
   { label: "Open", value: "open" },
@@ -263,9 +262,8 @@ function isStatusFilter(value: FilterValue): value is StatusFilter {
 function normalizeToken(bounty: ApiBounty) {
   const symbol = bounty.tokenSymbol ?? bounty.token ?? "USDC";
   const normalized = symbol.toString().replace(/^0x[a-f0-9]+$/i, "USDC").toLowerCase();
-  if (normalized === "usdc") return "USDC";
+  if (normalized === "usdc" || normalized === "cusd") return "USDC";
   if (normalized === "celo") return "CELO";
-  if (normalized === "usdc") return "USDC";
   return symbol.toString();
 }
 

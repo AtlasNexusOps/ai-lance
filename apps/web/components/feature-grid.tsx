@@ -16,7 +16,7 @@ const features = [
   {
     icon: ShieldCheck,
     title: "Stake-backed quality bar",
-    body: "Anti-sybil stake plus a CI relayer means every winning PR has objectively passed the build.",
+    body: "CI relayer verification means every winning PR has objectively passed the build.",
   },
   {
     icon: Scale,

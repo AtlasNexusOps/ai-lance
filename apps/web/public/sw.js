@@ -1,6 +1,18 @@
-// Minimal service worker to enable PWA install prompt
-// Chrome requires a functional SW to fire beforeinstallprompt
+// PWA Service Worker for AI2Work
+// Enables install prompt on Chrome (beforeinstallprompt requires a functional SW)
+
+const CACHE_NAME = "ai2work-v1";
+const OFFLINE_URL = "/";
+
 self.addEventListener("install", (event) => {
+  // Pre-cache the homepage for offline fallback
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.add(OFFLINE_URL).catch(() => {
+        // Non-blocking: if homepage pre-cache fails, SW still activates
+      });
+    })
+  );
   self.skipWaiting();
 });
 
@@ -8,16 +20,14 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(self.clients.claim());
 });
 
-// Offline fallback: return the page from cache, or a simple offline message
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request).catch(() => {
-        if (event.request.mode === "navigate") {
-          return caches.match("/");
-        }
-        return new Response("Offline", { status: 503 });
-      });
-    })
-  );
+  // Only handle navigation requests for offline fallback
+  // Pass through all other requests (API, static assets handled by CDN)
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(OFFLINE_URL) || new Response("Offline", { status: 503 });
+      })
+    );
+  }
 });

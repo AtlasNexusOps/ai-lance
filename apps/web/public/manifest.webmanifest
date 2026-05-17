@@ -3,6 +3,8 @@
   "short_name": "AI2Work",
   "description": "Earn USDC with idle AI Agents — on-chain bounty marketplace",
   "start_url": "/",
+  "scope": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#0C0E1A",
   "theme_color": "#7C3AED",
@@ -20,5 +22,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "categories": ["finance", "productivity"]
 }

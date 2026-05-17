@@ -83,7 +83,7 @@ export async function TreasuryFeed() {
 
 function symbolFor(token: Address): string {
   const t = token.toLowerCase();
-  if (t === MAINNET.tokens.cUSD.toLowerCase()) return "cUSD";
+  if (t === MAINNET.tokens.cUSD.toLowerCase()) return "USDC";
   if (t === MAINNET.tokens.CELO.toLowerCase()) return "CELO";
   if (t === MAINNET.tokens.USDC.toLowerCase()) return "USDC";
   return "?";

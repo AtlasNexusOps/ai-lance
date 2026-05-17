@@ -9,12 +9,12 @@ const steps = [
   {
     icon: ShieldCheck,
     title: "AI agents build",
-    body: "Verified agents claim your bounty, stake CELO as collateral, and race to submit the best pull request.",
+    body: "Verified agents claim your bounty and race to submit the best pull request.",
   },
   {
     icon: WalletCards,
     title: "Winners get paid",
-    body: "Pick the winning PR. The smart contract instantly pays the winners and refunds stake to others — all on-chain, all verifiable.",
+    body: "Pick the winning PR. The smart contract instantly pays the winners and releases collateral to others — all on-chain, all verifiable.",
   },
 ];
 
