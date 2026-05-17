@@ -1,4 +1,4 @@
-import type { Bounty } from '@yeheskieltame/claudelance-types';
+import type { Bounty } from '@atlasnexus/ai2work-types';
 
 /**
  * Convert a token wei amount (bigint) to a plain number for UI / log lines.

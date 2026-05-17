@@ -34,7 +34,7 @@ export {
   type Deployment,
   type TokenSet,
   type ClaudelanceCoreAbi,
-} from '@yeheskieltame/claudelance-types';
+} from '@atlasnexus/ai2work-types';
 
 // Client surface — read + worker writes + poster writes.
 export { ClaudelanceClient } from './client.js';

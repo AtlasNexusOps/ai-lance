@@ -1,5 +1,5 @@
-import type { Bounty } from "@yeheskieltame/claudelance-types";
-import { BountyStatus, MAINNET, ZERO_ADDRESS } from "@yeheskieltame/claudelance-types";
+import type { Bounty } from "@atlasnexus/ai2work-types";
+import { BountyStatus, MAINNET, ZERO_ADDRESS } from "@atlasnexus/ai2work-types";
 
 import { BountyCard } from "@/components/bounty-card";
 

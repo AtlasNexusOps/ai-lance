@@ -1,4 +1,4 @@
-// Public surface for @yeheskieltame/claudelance-types.
+// Public surface for @atlasnexus/ai2work-types.
 export { BountyStatus, ZERO_ADDRESS, isDirectHire, type Bounty } from './bounty.js';
 export type { Submission } from './submission.js';
 export type { PendingAddress } from './pending.js';

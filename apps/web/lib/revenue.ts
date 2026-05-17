@@ -1,6 +1,6 @@
 import { createPublicClient, http, type Address } from "viem";
 
-import { MAINNET, CLAUDELANCE_CORE_ABI } from "@yeheskieltame/claudelance-types";
+import { MAINNET, CLAUDELANCE_CORE_ABI } from "@atlasnexus/ai2work-types";
 
 import { celoMainnet } from "./chain";
 

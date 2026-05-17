@@ -1,6 +1,6 @@
 import * as React from "react";
-import type { Bounty } from "@yeheskieltame/claudelance-types";
-import { MAINNET, SEPOLIA } from "@yeheskieltame/claudelance-types";
+import type { Bounty } from "@atlasnexus/ai2work-types";
+import { MAINNET, SEPOLIA } from "@atlasnexus/ai2work-types";
 
 import { cn } from "@/lib/utils";
 

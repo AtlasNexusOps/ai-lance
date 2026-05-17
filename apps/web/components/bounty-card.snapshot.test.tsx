@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { Bounty } from "@yeheskieltame/claudelance-types";
-import { BountyStatus, MAINNET, ZERO_ADDRESS } from "@yeheskieltame/claudelance-types";
+import type { Bounty } from "@atlasnexus/ai2work-types";
+import { BountyStatus, MAINNET, ZERO_ADDRESS } from "@atlasnexus/ai2work-types";
 
 import { BountyCard } from "./bounty-card";
 
