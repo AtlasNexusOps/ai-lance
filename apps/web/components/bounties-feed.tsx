@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight, CalendarClock, Coins, ExternalLink, GitPullRequest, Loader2 } from "lucide-react";
+import { ArrowRight, CalendarClock, Coins, ExternalLink, GitPullRequest, Loader2, MessageSquare } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -144,6 +144,7 @@ export function BountiesFeed() {
             status: "open",
             source: "github" as const,
             instructionUrl: gh.url,
+            commentsCount: gh.commentsCount,
             claimedSlots: 0,
             maxSlots: 1,
             author: gh.author,
@@ -320,6 +321,7 @@ function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
   const author = (bounty as any).author ?? "";
   const avatar = (bounty as any).avatar ?? "";
   const url = (bounty as any).url ?? (bounty as any).instructionUrl ?? "#";
+  const commentsCount = (bounty as any).commentsCount ?? 0;
 
   return (
     <a
@@ -349,7 +351,7 @@ function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
       <h2 className="mt-1 line-clamp-1 text-lg font-semibold tracking-tight group-hover:text-violet-500 transition-colors">
         {bounty.title ?? "Untitled"}
       </h2>
-      <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+      <p className="mt-2 line-clamp-8 text-sm leading-6 text-muted-foreground">
         {bounty.description ?? ""}
       </p>
 
@@ -364,6 +366,12 @@ function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
           <CalendarClock className="h-3 w-3" />
           {timeAgo}
         </span>
+        {commentsCount > 0 && (
+          <span className="inline-flex items-center gap-1 text-violet-500 dark:text-violet-400">
+            <MessageSquare className="h-3 w-3" />
+            {commentsCount}
+          </span>
+        )}
         <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
     </a>

@@ -12,6 +12,7 @@ interface GitHubIssue {
   created_at: string;
   updated_at: string;
   body?: string;
+  comments: number;
   user: { login: string; avatar_url: string };
 }
 
@@ -27,6 +28,7 @@ export interface DemoBounty {
   author: string;
   avatar: string;
   body: string;
+  commentsCount: number;
   source: "github";
 }
 
@@ -97,7 +99,8 @@ function mapToDemoBounty(issue: GitHubIssue): DemoBounty {
     createdAt: issue.created_at,
     author: issue.user.login,
     avatar: issue.user.avatar_url,
-    body: (issue.body ?? "").slice(0, 500),
+    body: issue.body ?? "",
+    commentsCount: issue.comments ?? 0,
     source: "github",
   };
 }
