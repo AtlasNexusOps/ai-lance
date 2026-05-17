@@ -4,17 +4,6 @@ import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
 import { Wallet, LogOut, Copy, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 
-function hasInjectedProvider(): boolean {
-  if (typeof window === "undefined") return false;
-  const w = window as any;
-  return !!(w.ethereum && w.ethereum.request);
-}
-
-function isMobile(): boolean {
-  if (typeof window === "undefined") return false;
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
 export function ConnectWallet() {
   const { address, isConnected, chain } = useAccount();
   const { connect, connectors, error: wagmiError } = useConnect();
@@ -27,13 +16,12 @@ export function ConnectWallet() {
   useEffect(() => {
     if (wagmiError) {
       setConnectError(
-        wagmiError.message || "Connection failed. Make sure a wallet is installed."
+        wagmiError.message || "Connection failed."
       );
       setConnecting(false);
     }
   }, [wagmiError]);
 
-  // Clear connecting state when connected
   useEffect(() => {
     if (isConnected) setConnecting(false);
   }, [isConnected]);
@@ -42,24 +30,14 @@ export function ConnectWallet() {
     setConnectError(null);
     setConnecting(true);
 
-    if (hasInjectedProvider()) {
-      // Desktop: MetaMask / browser extension
-      const injectedConnector = connectors.find((c) => c.id === "injected");
-      if (injectedConnector) {
-        connect({ connector: injectedConnector });
-      }
-    } else if (isMobile()) {
-      // Mobile: WalletConnect (deep-links to wallet app, persists session)
-      const wcConnector = connectors.find((c) => c.id === "walletConnect");
-      if (wcConnector) {
-        connect({ connector: wcConnector });
-      } else {
-        setConnectError("WalletConnect not available.");
-        setConnecting(false);
-      }
+    // metaMask() handles both desktop (injected) and mobile (SDK deep-link)
+    const connector = connectors.find(
+      (c) => c.id === "metaMaskSDK" || c.id === "metaMask"
+    );
+    if (connector) {
+      connect({ connector });
     } else {
-      // Desktop without extension
-      setConnectError("Install MetaMask extension to connect.");
+      setConnectError("No wallet connector found. Refresh the page.");
       setConnecting(false);
     }
   };
@@ -88,7 +66,7 @@ export function ConnectWallet() {
           </span>
         </button>
         {connectError && (
-          <p className="max-w-[180px] text-right text-xs text-red-400">
+          <p className="max-w-[200px] text-right text-xs text-red-400">
             {connectError}
           </p>
         )}

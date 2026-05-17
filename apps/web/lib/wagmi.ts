@@ -1,5 +1,5 @@
 import { createConfig, http, type Config } from "wagmi";
-import { injected, metaMask } from "wagmi/connectors";
+import { metaMask } from "wagmi/connectors";
 import {
   celoMainnet,
   baseMainnet,
@@ -10,7 +10,6 @@ import {
 export const wagmiConfig: Config = createConfig({
   chains: [celoMainnet, baseMainnet, polygonMainnet, celoSepolia],
   connectors: [
-    injected(),
     metaMask(),
   ],
   transports: {
