@@ -42,6 +42,7 @@ type GhBounty = {
   author: string;
   avatar: string;
   body: string;
+  commentsCount: number;
   source: "github";
 };
 
