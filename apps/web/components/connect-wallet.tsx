@@ -1,14 +1,8 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
-import { injected } from "wagmi/connectors";
-import { Wallet, LogOut, Copy, Check, X } from "lucide-react";
+import { Wallet, LogOut, Copy, Check } from "lucide-react";
 import { useState, useEffect } from "react";
-
-function isMobile(): boolean {
-  if (typeof window === "undefined") return false;
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
 
 function hasInjectedProvider(): boolean {
   if (typeof window === "undefined") return false;
@@ -16,58 +10,58 @@ function hasInjectedProvider(): boolean {
   return !!(w.ethereum && w.ethereum.request);
 }
 
-const WALLETS = [
-  {
-    name: "MetaMask",
-    icon: "🦊",
-    getLink: (dappUrl: string) =>
-      `https://metamask.app.link/dapp/${dappUrl.replace(/^https?:\/\//, "")}`,
-  },
-  {
-    name: "Trust Wallet",
-    icon: "🛡️",
-    getLink: (dappUrl: string) =>
-      `https://link.trustwallet.com/open_url?coin_id=60&url=${encodeURIComponent(dappUrl)}`,
-  },
-  {
-    name: "Rainbow",
-    icon: "🌈",
-    getLink: (dappUrl: string) =>
-      `https://rnbwapp.com/wc?uri=${encodeURIComponent(dappUrl)}`,
-  },
-];
+function isMobile(): boolean {
+  if (typeof window === "undefined") return false;
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
 
 export function ConnectWallet() {
   const { address, isConnected, chain } = useAccount();
-  const { connect, error: wagmiError } = useConnect();
+  const { connect, connectors, error: wagmiError } = useConnect();
   const { disconnect } = useDisconnect();
   const { data: balance } = useBalance({ address });
   const [copied, setCopied] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
-  const [showWalletPicker, setShowWalletPicker] = useState(false);
+  const [connecting, setConnecting] = useState(false);
 
   useEffect(() => {
     if (wagmiError) {
       setConnectError(
         wagmiError.message || "Connection failed. Make sure a wallet is installed."
       );
+      setConnecting(false);
     }
   }, [wagmiError]);
 
+  // Clear connecting state when connected
+  useEffect(() => {
+    if (isConnected) setConnecting(false);
+  }, [isConnected]);
+
   const handleConnect = () => {
     setConnectError(null);
-    if (hasInjectedProvider()) {
-      connect({ connector: injected() });
-    } else if (isMobile()) {
-      setShowWalletPicker(true);
-    } else {
-      setConnectError("Install MetaMask extension to connect.");
-    }
-  };
+    setConnecting(true);
 
-  const openWalletLink = (wallet: (typeof WALLETS)[number]) => {
-    const dappUrl = window.location.origin + window.location.pathname;
-    window.open(wallet.getLink(dappUrl), "_blank");
+    if (hasInjectedProvider()) {
+      // Desktop: MetaMask / browser extension
+      const injectedConnector = connectors.find((c) => c.id === "injected");
+      if (injectedConnector) {
+        connect({ connector: injectedConnector });
+      }
+    } else if (isMobile()) {
+      // Mobile: WalletConnect (deep-links to wallet app, persists session)
+      const wcConnector = connectors.find((c) => c.id === "walletConnect");
+      if (wcConnector) {
+        connect({ connector: wcConnector });
+      } else {
+        setConnectError("WalletConnect not available.");
+        setConnecting(false);
+      }
+    } else {
+      // Desktop without extension
+      setConnectError("Install MetaMask extension to connect.");
+      setConnecting(false);
+    }
   };
 
   const copyAddress = async () => {
@@ -79,60 +73,26 @@ export function ConnectWallet() {
 
   if (!isConnected) {
     return (
-      <>
-        <div className="flex flex-col items-end gap-1">
-          <button
-            onClick={handleConnect}
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition hover:opacity-90"
-          >
-            <Wallet className="h-4 w-4" />
-            <span className="hidden sm:inline">Connect Wallet</span>
-            <span className="sm:hidden">Connect</span>
-          </button>
-          {connectError && (
-            <p className="max-w-[180px] text-right text-xs text-red-400">
-              {connectError}
-            </p>
-          )}
-        </div>
-
-        {showWalletPicker && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4 sm:items-center">
-            <div className="glass w-full max-w-sm rounded-2xl p-6 shadow-2xl">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Choose a wallet</h2>
-                <button
-                  onClick={() => setShowWalletPicker(false)}
-                  className="rounded-full p-1 hover:bg-muted"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Open this dApp inside your wallet browser to connect:
-              </p>
-              <div className="flex flex-col gap-2">
-                {WALLETS.map((wallet) => (
-                  <button
-                    key={wallet.name}
-                    onClick={() => openWalletLink(wallet)}
-                    className="flex items-center gap-3 rounded-xl bg-card px-4 py-3 text-left transition hover:bg-accent"
-                  >
-                    <span className="text-2xl">{wallet.icon}</span>
-                    <span className="font-medium">{wallet.name}</span>
-                    <span className="ml-auto text-xs text-muted-foreground">
-                      Open →
-                    </span>
-                  </button>
-                ))}
-              </div>
-              <p className="mt-4 text-center text-xs text-muted-foreground">
-                After connecting, come back to this tab and refresh.
-              </p>
-            </div>
-          </div>
+      <div className="flex flex-col items-end gap-1">
+        <button
+          onClick={handleConnect}
+          disabled={connecting}
+          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition hover:opacity-90 disabled:opacity-50"
+        >
+          <Wallet className="h-4 w-4" />
+          <span className="hidden sm:inline">
+            {connecting ? "Connecting…" : "Connect Wallet"}
+          </span>
+          <span className="sm:hidden">
+            {connecting ? "…" : "Connect"}
+          </span>
+        </button>
+        {connectError && (
+          <p className="max-w-[180px] text-right text-xs text-red-400">
+            {connectError}
+          </p>
         )}
-      </>
+      </div>
     );
   }
 
