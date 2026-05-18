@@ -267,7 +267,7 @@ function BountyFeedCard({ bounty }: { bounty: ApiBounty }) {
   const href = bounty.instructionUrl ?? bounty.targetRepoUrl ?? `/bounty/${bounty.id ?? ""}`;
 
   return (
-    <article className="group flex min-h-64 flex-col rounded-2xl border border-border bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass">
+    <article className="group flex min-h-48 flex-col rounded-2xl border border-border bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass">
       <div className="flex items-start justify-between gap-3">
         <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1", TOKEN_STYLES[token.toLowerCase()] ?? "bg-muted text-muted-foreground ring-border")}>
           <Coins className="h-3.5 w-3.5" />
@@ -329,7 +329,7 @@ function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="group flex min-h-64 flex-col rounded-2xl border border-violet-500/20 bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass"
+      className="group flex min-h-48 flex-col rounded-2xl border border-violet-500/20 bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass"
     >
       <div className="flex items-start justify-between gap-3">
         <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1", TOKEN_STYLES.github)}>
@@ -352,7 +352,7 @@ function GitHubBountyCard({ bounty }: { bounty: ApiBounty }) {
       <h2 className="mt-1 line-clamp-1 text-lg font-semibold tracking-tight group-hover:text-violet-500 transition-colors">
         {bounty.title ?? "Untitled"}
       </h2>
-      <p className="mt-2 line-clamp-8 text-sm leading-6 text-muted-foreground">
+      <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
         {bounty.description ?? ""}
       </p>
 

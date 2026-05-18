@@ -111,7 +111,9 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await searchGitHubIssues(page);
-    const bounties = data.items.map(mapToDemoBounty);
+    const bounties = data.items
+      .filter((issue) => issue.user.login.toLowerCase() !== "securebanana")
+      .map(mapToDemoBounty);
 
     return NextResponse.json({
       items: bounties,
