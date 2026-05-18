@@ -111,8 +111,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const data = await searchGitHubIssues(page);
+    const BLACKLISTED_REPOS = ["SecureBananaLabs/bug-bounty"];
     const bounties = data.items
-      .filter((issue) => issue.user.login.toLowerCase() !== "securebanana")
+      .filter((issue) => {
+        const repo = issue.repository_url.replace("https://api.github.com/repos/", "");
+        if (issue.user.login.toLowerCase() === "securebanana") return false;
+        if (BLACKLISTED_REPOS.includes(repo)) return false;
+        return true;
+      })
       .map(mapToDemoBounty);
 
     return NextResponse.json({
