@@ -40,3 +40,4 @@ claudelance-worker/
 # Solana build artifacts (never push target dir)
 solana/target/
 solana/Cargo.lock
+apps/web/android/android.keystore
