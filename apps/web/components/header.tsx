@@ -6,7 +6,6 @@ import { Sparkles, FlaskConical } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NetworkSwitcher } from "@/components/network-switcher";
 import { ConnectWallet } from "@/components/connect-wallet";
-import { ProfileAvatar } from "@/components/profile-avatar";
 
 export function Header() {
   return (
@@ -64,9 +63,6 @@ export function Header() {
           <ThemeToggle />
           <NetworkSwitcher />
           <ConnectWallet />
-          <span className="hidden md:inline-flex">
-            <ProfileAvatar />
-          </span>
         </div>
       </nav>
     </header>
