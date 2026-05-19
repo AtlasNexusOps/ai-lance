@@ -73,6 +73,24 @@ const TOKEN_STYLES: Record<string, string> = {
   github: "bg-violet-500/12 text-violet-700 ring-violet-500/25 dark:text-violet-300",
 };
 
+const BLACKLIST = ["orchestration-agent"];
+
+function isBlacklisted(bounty: ApiBounty): boolean {
+  const haystack = [
+    bounty.title,
+    bounty.description,
+    bounty.repo,
+    bounty.targetRepoUrl,
+    bounty.instructionUrl,
+    (bounty as any).author,
+    (bounty as any).url,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return BLACKLIST.some((term) => haystack.includes(term.toLowerCase()));
+}
+
 export function BountiesFeed() {
   const [activeFilter, setActiveFilter] = React.useState<FilterValue>("all");
   const [items, setItems] = React.useState<ApiBounty[]>([]);
@@ -180,8 +198,8 @@ export function BountiesFeed() {
     return () => observer.disconnect();
   }, [isLoading, loadPage, nextCursor]);
 
-  // Merge on-chain + GitHub, GitHub first
-  const allItems = [...ghItems, ...items];
+  // Merge on-chain + GitHub, GitHub first, then apply blacklist
+  const allItems = [...ghItems, ...items].filter((b) => !isBlacklisted(b));
 
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-24 pt-10 sm:pt-14">
