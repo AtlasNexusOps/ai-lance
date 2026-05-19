@@ -16,7 +16,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(rootProject.file("release.keystore"))
+            storeFile file(rootProject.file("android.keystore"))
             storePassword "ai2work"
             keyAlias "ai2work"
             keyPassword "ai2work"

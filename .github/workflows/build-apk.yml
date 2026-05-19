@@ -5,57 +5,44 @@ on:
     branches: [main]
     paths:
       - 'apps/web/android/**'
-      - 'apps/web/public/manifest.webmanifest'
       - '.github/workflows/build-apk.yml'
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Generate keystore
-        run: |
-          keytool -genkey -v \
-            -keystore apps/web/android/release.keystore \
-            -alias ai2work \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass ai2work -keypass ai2work \
-            -dname "CN=AI2Work, OU=AtlasNexus, O=AtlasNexus, L=Paris, ST=France, C=FR"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-34 build-tools;34.0.0'
 
-      - name: Setup Gradle
-        run: |
-          cd apps/web/android
-          chmod +x gradlew 2>/dev/null || true
-          # Download gradle wrapper if not present
-          if [ ! -f gradlew ]; then
-            gradle wrapper --gradle-version 8.5
-          fi
+      - name: Build release APK
+        working-directory: apps/web/android
+        run: ./gradlew assembleRelease
 
-      - name: Build APK
+      - name: Find APK
+        id: apk
         run: |
-          cd apps/web/android
-          ./gradlew assembleRelease 2>&1
-          find . -name "*.apk" -exec ls -lh {} \;
-          APK=$(find . -name "*.apk" -not -path "*/unsigned/*" -not -path "*/unaligned/*" | head -1)
-          cp "$APK" ../../ai2work.apk
-          ls -lh ../../ai2work.apk
+          APK=$(find apps/web/android/app/build/outputs/apk/release -name '*.apk' | head -1)
+          echo "path=$APK" >> $GITHUB_OUTPUT
+          echo "APK found: $APK"
 
-      - name: Upload to Release
+      - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: apk-latest
-          name: "AI2Work APK"
-          body: "Latest AI2Work Android APK — Trusted Web Activity wrapper"
-          files: ai2work.apk
-          prerelease: true
+          files: ${{ steps.apk.outputs.path }}
+          tag_name: v1.0.0
+          name: "AI2Work v1.0.0"
+          body: "Trusted Web Activity APK — wraps ai2work.onrender.com as a native Android app."
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
