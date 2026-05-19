@@ -1,8 +1,8 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import { useTheme } from "next-themes";
-import { useState, useEffect, useRef } from "react";
 import {
   Camera,
   Sun,
@@ -11,18 +11,43 @@ import {
   Wallet,
   LogOut,
   Bell,
+  BellOff,
   Globe,
   Shield,
   Check,
   Copy,
-  ChevronRight,
   User,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Zap,
+  DollarSign,
+  ChevronRight,
 } from "lucide-react";
 
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 const AVATAR_KEY = "ai2work-profile-avatar";
+const SETTINGS_KEY = "ai2work_settings";
+
+interface AppSettings {
+  currency: "USD" | "EUR" | "CELO";
+  notifications: boolean;
+  autoConnect: boolean;
+  refreshInterval: number; // seconds
+  hideBalances: boolean;
+  language: "en" | "fr";
+}
+
+const DEFAULTS: AppSettings = {
+  currency: "USD",
+  notifications: true,
+  autoConnect: true,
+  refreshInterval: 30,
+  hideBalances: false,
+  language: "en",
+};
 
 function getAvatar(addr: string): string | null {
   try {
@@ -30,13 +55,24 @@ function getAvatar(addr: string): string | null {
     return data[addr] || null;
   } catch { return null; }
 }
-
 function saveAvatar(addr: string, dataUrl: string) {
   try {
     const data = JSON.parse(localStorage.getItem(AVATAR_KEY) || "{}");
     data[addr] = dataUrl;
     localStorage.setItem(AVATAR_KEY, JSON.stringify(data));
-  } catch { /* noop */ }
+  } catch {}
+}
+
+function loadSettings(): AppSettings {
+  if (typeof window === "undefined") return DEFAULTS;
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (raw) return { ...DEFAULTS, ...JSON.parse(raw) };
+  } catch {}
+  return DEFAULTS;
+}
+function saveSettings(s: AppSettings) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch {}
 }
 
 export default function SettingsPage() {
@@ -47,11 +83,19 @@ export default function SettingsPage() {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [settings, setSettings] = useState<AppSettings>(loadSettings);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => {
     if (address) setAvatar(getAvatar(address));
   }, [address]);
+  useEffect(() => { setSettings(loadSettings()); }, []);
+
+  const update = (partial: Partial<AppSettings>) => {
+    const next = { ...settings, ...partial };
+    setSettings(next);
+    saveSettings(next);
+  };
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,14 +136,10 @@ export default function SettingsPage() {
           Settings
         </h1>
 
-        {/* ── Profile Section ── */}
+        {/* Profile */}
         <div className="mt-8 space-y-1">
-          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Profile
-          </p>
-
+          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Profile</p>
           <div className="glass rounded-2xl divide-y divide-border/50">
-            {/* Avatar */}
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
                 <User className="h-5 w-5 text-muted-foreground" />
@@ -125,7 +165,6 @@ export default function SettingsPage() {
               </button>
             </div>
 
-            {/* Wallet Address */}
             {isConnected && (
               <div className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
@@ -141,12 +180,9 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ── Appearance ── */}
+        {/* Appearance */}
         <div className="mt-8 space-y-1">
-          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Appearance
-          </p>
-
+          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Appearance</p>
           <div className="glass rounded-2xl divide-y divide-border/50">
             {themes.map(({ key, label, icon: Icon }) => (
               <button
@@ -158,47 +194,147 @@ export default function SettingsPage() {
                   <Icon className="h-5 w-5 text-muted-foreground" />
                   <span className="text-sm font-medium">{label}</span>
                 </div>
-                {theme === key && (
-                  <Check className="h-4 w-4 text-primary" />
-                )}
+                {theme === key && <Check className="h-4 w-4 text-primary" />}
               </button>
             ))}
           </div>
         </div>
 
-        {/* ── Preferences ── */}
+        {/* Display */}
         <div className="mt-8 space-y-1">
-          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Preferences
-          </p>
-
+          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Display</p>
           <div className="glass rounded-2xl divide-y divide-border/50">
+            {/* Currency */}
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <Bell className="h-5 w-5 text-muted-foreground" />
-                <span className="text-sm font-medium">Notifications</span>
+                <DollarSign className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Currency</span>
               </div>
-              <span className="text-xs text-muted-foreground">Coming soon</span>
+              <div className="flex gap-1">
+                {(["USD", "EUR", "CELO"] as const).map((cur) => (
+                  <button
+                    key={cur}
+                    onClick={() => update({ currency: cur })}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                      settings.currency === cur
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {cur}
+                  </button>
+                ))}
+              </div>
             </div>
 
+            {/* Hide Balances */}
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <Globe className="h-5 w-5 text-muted-foreground" />
-                <span className="text-sm font-medium">Language</span>
+                <Eye className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Hide Balances</span>
               </div>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                English <ChevronRight className="h-3.5 w-3.5" />
+              <button
+                onClick={() => update({ hideBalances: !settings.hideBalances })}
+                className={`rounded-full p-1.5 transition ${
+                  settings.hideBalances ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {settings.hideBalances ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
+
+            {/* Refresh Interval */}
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <RefreshCw className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Data Refresh</span>
+              </div>
+              <div className="flex gap-1">
+                {([15, 30, 60] as const).map((sec) => (
+                  <button
+                    key={sec}
+                    onClick={() => update({ refreshInterval: sec })}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                      settings.refreshInterval === sec
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {sec}s
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Security ── */}
+        {/* Behavior */}
         <div className="mt-8 space-y-1">
-          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Security
-          </p>
+          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Behavior</p>
+          <div className="glass rounded-2xl divide-y divide-border/50">
+            {/* Notifications */}
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <Bell className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Bounty Notifications</span>
+              </div>
+              <button
+                onClick={() => update({ notifications: !settings.notifications })}
+                className={`rounded-full p-1.5 transition ${
+                  settings.notifications ? "bg-emerald-500/10 text-emerald-400" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {settings.notifications ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
+              </button>
+            </div>
 
+            {/* Auto-connect */}
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <Zap className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Auto-connect Wallet</span>
+              </div>
+              <button
+                onClick={() => update({ autoConnect: !settings.autoConnect })}
+                className={`rounded-full p-1.5 transition ${
+                  settings.autoConnect ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                <Zap className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Language */}
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <Globe className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">Language</span>
+              </div>
+              <div className="flex gap-1">
+                {([
+                  { value: "en", label: "EN" },
+                  { value: "fr", label: "FR" },
+                ] as const).map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => update({ language: value })}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
+                      settings.language === value
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Security */}
+        <div className="mt-8 space-y-1">
+          <p className="px-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Security</p>
           <div className="glass rounded-2xl divide-y divide-border/50">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
@@ -210,7 +346,21 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ── Disconnect ── */}
+        {/* Reset */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => {
+              setSettings(DEFAULTS);
+              saveSettings(DEFAULTS);
+              setTheme("system");
+            }}
+            className="text-xs text-muted-foreground underline decoration-dotted underline-offset-4 hover:text-foreground"
+          >
+            Reset all settings to defaults
+          </button>
+        </div>
+
+        {/* Disconnect */}
         {isConnected && (
           <div className="mt-8 text-center">
             <button

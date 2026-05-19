@@ -1,23 +1,37 @@
 "use client";
 
-import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { useState, useEffect, useRef } from "react";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 import {
-  Camera,
+  UserCircle,
+  Mail,
+  Phone,
+  Globe,
+  Save,
+  Edit3,
+  Shield,
+  Wallet,
   Copy,
   Check,
-  Wallet,
-  LogOut,
+  Camera,
   Award,
-  Clock,
   Briefcase,
-  User,
+  Clock,
+  LogOut,
 } from "lucide-react";
-
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { shortAddress } from "@/lib/utils";
 
 const AVATAR_KEY = "ai2work-profile-avatar";
+const PROFILE_KEY = "ai2work_profile";
+
+interface ProfileInfo {
+  name: string;
+  email: string;
+  phone: string;
+  website: string;
+}
 
 function getAvatar(addr: string): string | null {
   try {
@@ -27,13 +41,26 @@ function getAvatar(addr: string): string | null {
     return null;
   }
 }
-
 function saveAvatar(addr: string, dataUrl: string) {
   try {
     const data = JSON.parse(localStorage.getItem(AVATAR_KEY) || "{}");
     data[addr] = dataUrl;
     localStorage.setItem(AVATAR_KEY, JSON.stringify(data));
-  } catch { /* noop */ }
+  } catch {}
+}
+
+function loadProfile(): ProfileInfo {
+  if (typeof window === "undefined") return { name: "", email: "", phone: "", website: "" };
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { name: "", email: "", phone: "", website: "" };
+}
+function saveProfile(info: ProfileInfo) {
+  try {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(info));
+  } catch {}
 }
 
 export default function WorkerProfilePage() {
@@ -45,9 +72,16 @@ export default function WorkerProfilePage() {
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const [profile, setProfile] = useState<ProfileInfo>(loadProfile);
+  const [editing, setEditing] = useState(false);
+  const [saved, setSaved] = useState(false);
+
   useEffect(() => {
     if (address) setAvatar(getAvatar(address));
   }, [address]);
+  useEffect(() => {
+    setProfile(loadProfile());
+  }, []);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,6 +101,13 @@ export default function WorkerProfilePage() {
     await navigator.clipboard.writeText(address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSaveProfile = () => {
+    saveProfile(profile);
+    setSaved(true);
+    setEditing(false);
+    setTimeout(() => setSaved(false), 2500);
   };
 
   if (!isConnected || !address) {
@@ -89,8 +130,6 @@ export default function WorkerProfilePage() {
     );
   }
 
-  const short = `${address!.slice(0, 6)}…${address!.slice(-4)}`;
-
   return (
     <main className="relative isolate min-h-dvh overflow-hidden">
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-anime opacity-40 dark:opacity-30" />
@@ -98,15 +137,9 @@ export default function WorkerProfilePage() {
       <Header />
 
       <section className="mx-auto w-full max-w-2xl px-4 py-12">
-        {/* ── Avatar + Name ── */}
+        {/* Avatar + Name */}
         <div className="flex flex-col items-center gap-4">
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="hidden"
-            onChange={handleUpload}
-          />
+          <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={handleUpload} />
           <button
             onClick={() => fileRef.current?.click()}
             className="group relative h-24 w-24 overflow-hidden rounded-full border-4 border-primary/30 bg-muted shadow-glow transition hover:border-primary/60"
@@ -124,24 +157,21 @@ export default function WorkerProfilePage() {
           </button>
 
           <div className="text-center">
-            <h1 className="font-display text-2xl font-semibold">Worker Profile</h1>
-            <button
-              onClick={copyAddr}
-              className="mt-1 inline-flex items-center gap-1 font-mono text-sm text-muted-foreground transition hover:text-foreground"
-            >
-              {short}
+            <h1 className="font-display text-2xl font-semibold">
+              {profile.name || "AI Agent"}
+            </h1>
+            <button onClick={copyAddr} className="mt-1 inline-flex items-center gap-1 font-mono text-sm text-muted-foreground transition hover:text-foreground">
+              {shortAddress(address)}
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
           </div>
         </div>
 
-        {/* ── Info Cards ── */}
+        {/* Info Cards */}
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {/* Wallet */}
           <div className="glass rounded-2xl p-5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Wallet className="h-4 w-4 text-primary" />
-              Wallet
+              <Wallet className="h-4 w-4 text-primary" /> Wallet
             </div>
             <p className="mt-2 font-mono text-sm break-all">{address}</p>
             {balance && (
@@ -156,42 +186,108 @@ export default function WorkerProfilePage() {
             )}
           </div>
 
-          {/* Identity */}
           <div className="glass rounded-2xl p-5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Award className="h-4 w-4 text-amber-400" />
-              Identity
+              <Award className="h-4 w-4 text-amber-400" /> Identity
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              ERC-8004 Agent Identity
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground/70">
-              Claim your on-chain identity in Settings
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">ERC-8004 Agent Identity</p>
+            <p className="mt-1 text-xs text-muted-foreground/70">Claim your on-chain identity in Settings</p>
           </div>
 
-          {/* Stats */}
           <div className="glass rounded-2xl p-5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Briefcase className="h-4 w-4 text-blue-400" />
-              Bounties Completed
+              <Briefcase className="h-4 w-4 text-blue-400" /> Bounties Completed
             </div>
             <p className="mt-2 text-2xl font-bold tabular-nums">—</p>
             <p className="text-xs text-muted-foreground">Coming soon</p>
           </div>
 
-          {/* Earnings */}
           <div className="glass rounded-2xl p-5">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4 text-emerald-400" />
-              Total Earned
+              <Clock className="h-4 w-4 text-emerald-400" /> Total Earned
             </div>
             <p className="mt-2 text-2xl font-bold tabular-nums">—</p>
             <p className="text-xs text-muted-foreground">Coming soon</p>
           </div>
         </div>
 
-        {/* ── Disconnect ── */}
+        {/* Edit Info */}
+        <div className="glass mt-6 rounded-2xl p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-semibold">
+              <Edit3 className="h-4 w-4 text-primary" />
+              Edit Info
+            </h2>
+            {!editing ? (
+              <button onClick={() => setEditing(true)} className="rounded-full px-3 py-1 text-xs font-medium text-primary transition hover:bg-primary/10">
+                Edit
+              </button>
+            ) : (
+              <button onClick={handleSaveProfile} className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow transition hover:opacity-90">
+                <Save className="h-3.5 w-3.5" />
+                {saved ? "Saved!" : "Save"}
+              </button>
+            )}
+          </div>
+
+          <div className="mt-4 space-y-4">
+            <label className="block">
+              <span className="text-xs font-medium text-muted-foreground">Display Name</span>
+              <input
+                type="text"
+                disabled={!editing}
+                value={profile.name}
+                onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                placeholder="Your agent name"
+                className="mt-1.5 w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm placeholder:text-muted-foreground/50 disabled:opacity-60"
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-medium text-muted-foreground">
+                <Mail className="mr-1 inline h-3 w-3" /> Email
+              </span>
+              <input
+                type="email"
+                disabled={!editing}
+                value={profile.email}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                placeholder="agent@example.com"
+                className="mt-1.5 w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm placeholder:text-muted-foreground/50 disabled:opacity-60"
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-medium text-muted-foreground">
+                <Phone className="mr-1 inline h-3 w-3" /> Phone
+              </span>
+              <input
+                type="tel"
+                disabled={!editing}
+                value={profile.phone}
+                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                placeholder="+33 6 12 34 56 78"
+                className="mt-1.5 w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm placeholder:text-muted-foreground/50 disabled:opacity-60"
+              />
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-medium text-muted-foreground">
+                <Globe className="mr-1 inline h-3 w-3" /> Website
+              </span>
+              <input
+                type="url"
+                disabled={!editing}
+                value={profile.website}
+                onChange={(e) => setProfile({ ...profile, website: e.target.value })}
+                placeholder="https://your-site.com"
+                className="mt-1.5 w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm placeholder:text-muted-foreground/50 disabled:opacity-60"
+              />
+            </label>
+          </div>
+        </div>
+
+        {/* Disconnect */}
         <div className="mt-8 text-center">
           <button
             onClick={() => disconnect()}
