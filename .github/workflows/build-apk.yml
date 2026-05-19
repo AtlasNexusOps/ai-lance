@@ -49,17 +49,16 @@ jobs:
 
       - name: Create/Update Release
         run: |
-          APK=$(find apps/web/android/app/build/outputs/apk/release -name '*.apk' | head -1)
-          echo "APK: $APK"
+          APK_DIR="apps/web/android/app/build/outputs/apk/release"
+          # Rename to match expected URL
+          cp "$APK_DIR"/app-release.apk "$APK_DIR"/ai2work.apk
           # Delete existing tag if present
           gh release delete v1.0.0 --yes 2>/dev/null || true
           git tag -d v1.0.0 2>/dev/null || true
           git push origin :refs/tags/v1.0.0 2>/dev/null || true
           # Create new release
-          gh release create v1.0.0 "$APK" \
+          gh release create v1.0.0 "$APK_DIR/ai2work.apk" \
             --title "AI2Work v1.0.0" \
-            --notes "Trusted Web Activity APK — wraps ai2work.onrender.com as a native Android app.
-            
-            **SHA256:** $(keytool -printcert -jarfile "$APK" 2>/dev/null | grep SHA256 | awk '{print $2}' || echo 'see artifact')"
+            --notes "Trusted Web Activity APK — native Android wrapper for ai2work.onrender.com"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
