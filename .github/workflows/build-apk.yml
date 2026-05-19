@@ -4,9 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'apps/web/android/**'
       - 'apps/web/public/manifest.webmanifest'
-      - 'apps/web/public/icon-192.png'
-      - 'apps/web/public/icon.svg'
       - '.github/workflows/build-apk.yml'
   workflow_dispatch:
 
@@ -23,90 +22,39 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          curl -sL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o sdk.zip
-          unzip -qo sdk.zip
-          mv cmdline-tools latest
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1
-
       - name: Generate keystore
         run: |
           keytool -genkey -v \
-            -keystore release.keystore \
+            -keystore apps/web/android/release.keystore \
             -alias ai2work \
             -keyalg RSA -keysize 2048 -validity 10000 \
             -storepass ai2work -keypass ai2work \
             -dname "CN=AI2Work, OU=AtlasNexus, O=AtlasNexus, L=Paris, ST=France, C=FR"
 
-      - name: Create TWA project
+      - name: Setup Gradle
         run: |
-          cat > twa-manifest.json << 'JSONEOF'
-          {
-            "packageId": "tech.atlasnexus.ai2work",
-            "host": "ai2work.onrender.com",
-            "name": "AI2Work",
-            "launcherName": "AI2Work",
-            "display": "standalone",
-            "themeColor": "#0C0E1A",
-            "navigationColor": "#0C0E1A",
-            "backgroundColor": "#090B12",
-            "startUrl": "/",
-            "iconUrl": "https://ai2work.onrender.com/icon-192.png",
-            "maskableIconUrl": "https://ai2work.onrender.com/icon-192.png",
-            "monochromeIconUrl": "https://ai2work.onrender.com/icon.svg",
-            "splashScreenFadeOutDuration": 300,
-            "signingKey": { "path": "./release.keystore", "alias": "ai2work" },
-            "appVersionName": "1.0.0",
-            "appVersionCode": 1,
-            "shortcuts": [],
-            "generatorApp": "bubblewrap-cli",
-            "webManifestUrl": "https://ai2work.onrender.com/manifest.webmanifest",
-            "fallbackType": "customtabs",
-            "features": { "locationDelegation": { "enabled": false } },
-            "alphaDependencies": { "enabled": false },
-            "enableSiteSettingsShortcut": true,
-            "isChromeOSOnly": false,
-            "isMetaQuest": false,
-            "fullScopeUrl": "https://ai2work.onrender.com/",
-            "minSdkVersion": 19,
-            "orientation": "default",
-            "fingerprints": [],
-            "additionalTrustedOrigins": [],
-            "retainUpdatedState": true
-          }
-          JSONEOF
-
-      - name: Build APK with bubblewrap
-        run: |
-          npm install -g @bubblewrap/cli 2>&1 | tail -2
-          # Set JAVA_HOME so bubblewrap skips the JDK prompt
-          export JAVA_HOME="${JAVA_HOME:-/usr/lib/jvm/temurin-17-jdk-amd64}"
-          # Run build — pipe 'n' to answer JDK prompt if it still appears
-          echo 'n' | bubblewrap build 2>&1 || true
-          # If gradle project was generated, run it directly
-          if [ -d app ]; then
-            cd app
-            chmod +x gradlew
-            ./gradlew assembleRelease 2>&1 | tail -10
-            cd ..
+          cd apps/web/android
+          chmod +x gradlew 2>/dev/null || true
+          # Download gradle wrapper if not present
+          if [ ! -f gradlew ]; then
+            gradle wrapper --gradle-version 8.5
           fi
-          # Find the APK
+
+      - name: Build APK
+        run: |
+          cd apps/web/android
+          ./gradlew assembleRelease 2>&1
           find . -name "*.apk" -exec ls -lh {} \;
-          find . -name "*.apk" -not -path "*/unaligned/*" -exec cp {} ai2work.apk \;
-          ls -lh ai2work.apk
+          APK=$(find . -name "*.apk" -not -path "*/unsigned/*" -not -path "*/unaligned/*" | head -1)
+          cp "$APK" ../../ai2work.apk
+          ls -lh ../../ai2work.apk
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-latest
           name: "AI2Work APK"
-          body: "Latest AI2Work Android APK"
+          body: "Latest AI2Work Android APK — Trusted Web Activity wrapper"
           files: ai2work.apk
           prerelease: true
         env:
