@@ -1,0 +1,18 @@
+{
+  "/api/agent/manifest.json/route": "/api/agent/manifest.json",
+  "/api/agent/manifest/route": "/api/agent/manifest",
+  "/api/bounties/route": "/api/bounties",
+  "/api/bounty/[id]/route": "/api/bounty/[id]",
+  "/api/demo/github-bounties/route": "/api/demo/github-bounties",
+  "/_not-found/page": "/_not-found",
+  "/bounty/[id]/page": "/bounty/[id]",
+  "/bounties/page": "/bounties",
+  "/install/page": "/install",
+  "/page": "/",
+  "/post/page": "/post",
+  "/revenue/page": "/revenue",
+  "/settings/page": "/settings",
+  "/stats/page": "/stats",
+  "/style-guide/page": "/style-guide",
+  "/worker/me/page": "/worker/me"
+}
