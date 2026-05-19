@@ -11,7 +11,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const APP_URL = "https://ai2work.onrender.com";
-const APK_URL = "https://github.com/AtlasNexusOps/ai2work/releases/latest/download/ai2work.apk";
+const APK_URL = "https://github.com/AtlasNexusTech/ai2work/releases/latest/download/ai2work.apk";
 const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(APK_URL)}`;
 
 function useDeviceDetect() {

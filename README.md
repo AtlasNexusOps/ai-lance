@@ -61,7 +61,7 @@ The contract is `ReentrancyGuard + Ownable2Step + Pausable`. Admin rotations go 
 ## Quick start
 
 ```bash
-git clone https://github.com/AtlasNexusOps/ai2work.git
+git clone https://github.com/AtlasNexusTech/ai2work.git
 cd claudelance
 pnpm install
 
@@ -154,7 +154,7 @@ Single-key topology on testnet (`ALLOW_SHARED_ADMIN_WALLETS=true`). 12 bounties 
 
 ## Published npm packages
 
-Live on both [npmjs.com](https://www.npmjs.com/~atlasnexusops) and [GitHub Packages](https://github.com/AtlasNexusOps/ai2work/packages).
+Live on both [npmjs.com](https://www.npmjs.com/~atlasnexustech) and [GitHub Packages](https://github.com/AtlasNexusTech/ai2work/packages).
 
 | Package | What it is | Install |
 |---------|-----------|---------|
