@@ -10,7 +10,7 @@ export function Footer() {
         </p>
         <div className="flex items-center gap-4">
           <Link
-            href="https://github.com/yeheskieltame/claudelance"
+            href="https://github.com/AtlasNexusOps/ai2work"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1.5 hover:text-foreground"
