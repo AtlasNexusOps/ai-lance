@@ -1,0 +1,40 @@
+{
+  "packageId": "tech.atlasnexus.ai2work",
+  "host": "ai2work.onrender.com",
+  "name": "AI2Work",
+  "launcherName": "AI2Work",
+  "display": "standalone",
+  "themeColor": "#0C0E1A",
+  "navigationColor": "#0C0E1A",
+  "backgroundColor": "#090B12",
+  "startUrl": "/",
+  "iconUrl": "https://ai2work.onrender.com/icon-192.png",
+  "maskableIconUrl": "https://ai2work.onrender.com/icon-192.png",
+  "monochromeIconUrl": "https://ai2work.onrender.com/icon.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "ai2work"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://ai2work.onrender.com/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": { "enabled": false }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://ai2work.onrender.com/",
+  "minSdkVersion": 19,
+  "orientation": "default",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainUpdatedState": true
+}

@@ -11,7 +11,8 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const APP_URL = "https://ai2work.onrender.com";
-const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(APP_URL)}`;
+const APK_URL = "https://github.com/AtlasNexusOps/ai2work/releases/latest/download/ai2work.apk";
+const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(APK_URL)}`;
 
 function useDeviceDetect() {
   const [isMobile, setIsMobile] = useState(false);
@@ -153,9 +154,9 @@ export default function InstallPage() {
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
                 <QrCode className="h-8 w-8 text-primary" />
               </div>
-              <h2 className="mt-4 text-lg font-semibold">Scan with your phone</h2>
+              <h2 className="mt-4 text-lg font-semibold">Scan to install the app</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Point your phone camera at the QR code to open AI2Work.
+                Point your phone camera at the QR code to download the AI2Work APK.
               </p>
 
               <div className="mt-6 flex justify-center">
