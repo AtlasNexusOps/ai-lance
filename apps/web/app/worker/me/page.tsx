@@ -69,7 +69,7 @@ export default function WorkerProfilePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return (
       <main className="relative isolate min-h-dvh overflow-hidden">
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-anime opacity-40 dark:opacity-30" />

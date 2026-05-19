@@ -2,7 +2,7 @@
 
 import { useAccount } from "wagmi";
 import { useRef, useState, useEffect } from "react";
-import { Camera, User } from "lucide-react";
+import { Camera } from "lucide-react";
 
 const AVATAR_STORAGE_KEY = "ai2work-profile-avatar";
 
@@ -54,11 +54,13 @@ export function ProfileAvatar() {
     e.target.value = "";
   };
 
-  if (!isConnected) {
+  if (!isConnected || !address) {
     return (
-      <div className="flex items-center gap-2 rounded-full bg-muted/50 px-3 py-1.5 text-xs text-muted-foreground">
-        <User className="h-4 w-4 opacity-50" />
-        <span className="hidden sm:inline">Please connect wallet</span>
+      <div className="flex items-center gap-2 rounded-full bg-muted/50 py-1 pl-1 pr-3 text-xs text-muted-foreground">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-black leading-none text-primary-foreground shadow-glow">
+          +
+        </span>
+        <span className="hidden sm:inline">please connect wallet</span>
       </div>
     );
   }
