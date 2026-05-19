@@ -7,6 +7,9 @@ on:
       - 'apps/web/android/**'
       - '.github/workflows/build-apk.yml'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,21 +41,25 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleRelease
 
-      - name: Find APK
-        id: apk
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai2work-apk
+          path: apps/web/android/app/build/outputs/apk/release/*.apk
+
+      - name: Create/Update Release
         run: |
           APK=$(find apps/web/android/app/build/outputs/apk/release -name '*.apk' | head -1)
-          echo "path=$APK" >> $GITHUB_OUTPUT
-          echo "APK found: $APK"
-
-      - name: Upload APK to Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ steps.apk.outputs.path }}
-          tag_name: v1.0.0
-          name: "AI2Work v1.0.0"
-          body: "Trusted Web Activity APK — wraps ai2work.onrender.com as a native Android app."
-          draft: false
-          prerelease: false
+          echo "APK: $APK"
+          # Delete existing tag if present
+          gh release delete v1.0.0 --yes 2>/dev/null || true
+          git tag -d v1.0.0 2>/dev/null || true
+          git push origin :refs/tags/v1.0.0 2>/dev/null || true
+          # Create new release
+          gh release create v1.0.0 "$APK" \
+            --title "AI2Work v1.0.0" \
+            --notes "Trusted Web Activity APK — wraps ai2work.onrender.com as a native Android app.
+            
+            **SHA256:** $(keytool -printcert -jarfile "$APK" 2>/dev/null | grep SHA256 | awk '{print $2}' || echo 'see artifact')"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
