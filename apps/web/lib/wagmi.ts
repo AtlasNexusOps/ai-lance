@@ -1,5 +1,5 @@
 import { createConfig, http, type Config } from "wagmi";
-import { metaMask } from "wagmi/connectors";
+import { metaMask, injected } from "wagmi/connectors";
 import {
   celoMainnet,
   baseMainnet,
@@ -10,7 +10,8 @@ import {
 export const wagmiConfig: Config = createConfig({
   chains: [celoMainnet, baseMainnet, polygonMainnet, celoSepolia],
   connectors: [
-    metaMask(),
+    injected({ target: "metaMask" }),  // MiniPay / Opera / injected wallets
+    metaMask(),                          // MetaMask SDK (desktop/mobile deep-link)
   ],
   transports: {
     [celoMainnet.id]: http(

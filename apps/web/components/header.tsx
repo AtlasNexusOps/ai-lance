@@ -2,12 +2,28 @@
 
 import Link from "next/link";
 import { Sparkles, FlaskConical } from "lucide-react";
+import { useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
+import { useEffect, useState } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NetworkSwitcher } from "@/components/network-switcher";
 import { ConnectWallet } from "@/components/connect-wallet";
+import { useMiniPayDetection } from "@/lib/minipay";
 
 export function Header() {
+  const isMiniPay = useMiniPayDetection();
+  const { connect } = useConnect();
+  const [autoConnected, setAutoConnected] = useState(false);
+
+  // Auto-connect when inside MiniPay in-app browser
+  useEffect(() => {
+    if (isMiniPay && !autoConnected) {
+      connect({ connector: injected({ target: "metaMask" }) });
+      setAutoConnected(true);
+    }
+  }, [isMiniPay, autoConnected, connect]);
+
   return (
     <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">
       <nav className="glass flex h-14 items-center justify-between rounded-full px-4 sm:h-16 sm:px-6">
@@ -62,7 +78,8 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <NetworkSwitcher />
-          <ConnectWallet />
+          {/* Hide ConnectWallet on MiniPay — wallet is auto-injected */}
+          {!isMiniPay && <ConnectWallet />}
         </div>
       </nav>
     </header>

@@ -44,10 +44,10 @@ function getHelpfulError(rawError: string | undefined): string {
     setConnectError(null);
     setConnecting(true);
 
-    // metaMask() handles both desktop (injected) and mobile (SDK deep-link)
-    const connector = connectors.find(
-      (c) => c.id === "metaMaskSDK" || c.id === "metaMask"
-    );
+    // Try injected first (MiniPay / Opera / browser wallets), fallback to MetaMask SDK
+    const connector =
+      connectors.find((c) => c.id === "injected") ||
+      connectors.find((c) => c.id === "metaMaskSDK" || c.id === "metaMask");
     if (connector) {
       connect({ connector });
     } else {
