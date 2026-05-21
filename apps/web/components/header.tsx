@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FlaskConical } from "lucide-react";
 import { useAccount, useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
 import { useEffect, useRef } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -16,18 +17,19 @@ export function Header() {
   const { isConnected } = useAccount();
   const attemptedRef = useRef(false);
 
-  // Auto-connect for ALL injected wallets (MetaMask, MiniPay, browser extension, mobile)
+  // Auto-connect ONLY for injected wallet (window.ethereum).
+  // MetaMask SDK is NOT auto-connected — it tries deep-links that fail on desktop.
   useEffect(() => {
     if (attemptedRef.current || isConnected) return;
     if (typeof window === "undefined") return;
+    if (!window.ethereum) return; // no injected provider — don't try
 
-    const injectedConnector = connectors.find(
-      (c) => c.id === "injected" || c.id === "metaMaskSDK" || c.id === "metaMask"
-    );
+    const injectedConnector = connectors.find((c) => c.id === "injected");
     if (!injectedConnector) return;
 
     attemptedRef.current = true;
-    connect({ connector: injectedConnector });
+    // Silently try to connect — errors are normal (user may dismiss)
+    connect({ connector: injectedConnector }).catch(() => {});
   }, [connect, connectors, isConnected]);
 
   return (
@@ -38,7 +40,7 @@ export function Header() {
           <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex items-center">
             AI2Work
           </span>
-          <span className="hidden rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400 sm:inline-flex items-center gap-1">
+          <span className="inline-flex rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400 items-center gap-1">
             <FlaskConical className="h-3 w-3" />
             Live Beta
           </span>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Rss, Settings, SquarePen, UserCircle } from "lucide-react";
+import { FlaskConical, Rss, Settings, SquarePen, UserCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,14 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/92 px-3 pt-2 shadow-[0_-16px_40px_-24px_rgba(15,23,42,0.55)] backdrop-blur-xl md:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
+      {/* Live Beta badge */}
+      <div className="mx-auto mb-1 flex justify-center">
+        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+          <FlaskConical className="h-2.5 w-2.5" />
+          Live Beta
+        </span>
+      </div>
+
       <ul className="mx-auto grid max-w-md grid-cols-4 gap-1">
         {navItems.map(({ label, href, icon: Icon, match }) => {
           const active = match(pathname);
