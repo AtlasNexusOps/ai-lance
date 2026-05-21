@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, FlaskConical } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { useEffect, useState } from "react";
@@ -28,10 +28,8 @@ export function Header() {
     <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">
       <nav className="glass flex h-14 items-center justify-between rounded-full px-4 sm:h-16 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-glow">
-            <Sparkles className="h-4 w-4" />
-          </span>
-          <span className="hidden text-sm font-semibold tracking-tight sm:inline">
+          <img src="/logo.png" alt="AI2Work" className="h-8 w-8 rounded-lg" />
+          <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex items-center">
             AI2Work
           </span>
           <span className="hidden rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400 sm:inline-flex items-center gap-1">

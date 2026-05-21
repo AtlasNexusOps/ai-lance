@@ -7,8 +7,10 @@
     </linearGradient>
   </defs>
   <rect width="32" height="32" rx="8" fill="url(#g)"/>
-  <!-- Sparkles star — 4-pointed star matching lucide-react Sparkles icon -->
-  <path d="M16 2L17.2 13.2L18 16L17.2 18.8L16 30L14.8 18.8L14 16L14.8 13.2L16 2Z" fill="white" opacity="0.95"/>
-  <path d="M8 9L8.5 9.5L9 9L8.5 8.5L8 9Z" fill="white" opacity="0.7"/>
-  <path d="M24 23L24.5 23.5L25 23L24.5 22.5L24 23Z" fill="white" opacity="0.7"/>
+  <!-- Centered 4-pointed star -->
+  <path d="M16 4L16.8 12.8L17.2 16L16.8 19.2L16 28L15.2 19.2L14.8 16L15.2 12.8L16 4Z" fill="white" opacity="0.95"/>
+  <!-- Small sparkle top-right -->
+  <path d="M23 7L23.5 7.5L24 7L23.5 6.5L23 7Z" fill="white" opacity="0.7"/>
+  <!-- Small sparkle bottom-left -->
+  <path d="M9 25L9.5 25.5L10 25L9.5 24.5L9 25Z" fill="white" opacity="0.7"/>
 </svg>
