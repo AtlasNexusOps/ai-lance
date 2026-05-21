@@ -198,8 +198,16 @@ export function BountiesFeed() {
     return () => observer.disconnect();
   }, [isLoading, loadPage, nextCursor]);
 
-  // Merge on-chain + GitHub, GitHub first, then apply blacklist
-  const allItems = [...ghItems, ...items].filter((b) => !isBlacklisted(b));
+  // Merge on-chain + GitHub, sort open → resolved, then apply blacklist
+  const allItems = [...ghItems, ...items]
+    .sort((a, b) => {
+      const sa = normalizeStatus(a.status);
+      const sb = normalizeStatus(b.status);
+      if (sa === "open" && sb !== "open") return -1;
+      if (sa !== "open" && sb === "open") return 1;
+      return 0; // preserve existing order within same status
+    })
+    .filter((b) => !isBlacklisted(b));
 
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-24 pt-10 sm:pt-14">
