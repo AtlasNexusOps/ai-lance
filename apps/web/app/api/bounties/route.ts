@@ -195,7 +195,7 @@ function parseQuery(searchParams: URLSearchParams):
 }
 
 function getActiveDeployment(): Deployment {
-  return process.env.NEXT_PUBLIC_DEFAULT_CHAIN === "celo-mainnet" ? MAINNET : SEPOLIA;
+  return process.env.NEXT_PUBLIC_DEFAULT_CHAIN === "celo-sepolia" ? SEPOLIA : MAINNET;
 }
 
 function getRpcOverride(chainId: number) {

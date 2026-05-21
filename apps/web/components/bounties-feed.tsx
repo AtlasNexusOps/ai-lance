@@ -282,7 +282,7 @@ function BountyFeedCard({ bounty }: { bounty: ApiBounty }) {
   const amount = formatAmount(bounty.amount);
   const title = bounty.title ?? deriveTitle(bounty);
   const description = bounty.description ?? bounty.instructionUrl ?? "Review the linked issue for full acceptance criteria.";
-  const href = bounty.instructionUrl ?? bounty.targetRepoUrl ?? `/bounty/${bounty.id ?? ""}`;
+  const href = bounty.instructionUrl || bounty.targetRepoUrl || `/bounty/${bounty.id ?? ""}`;
 
   return (
     <article className="group flex min-h-48 flex-col rounded-2xl border border-border bg-card/80 p-5 shadow-sm backdrop-blur transition motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-glass">
