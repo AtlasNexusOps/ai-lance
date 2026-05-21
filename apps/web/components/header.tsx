@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { FlaskConical } from "lucide-react";
-import { useAccount, useConnect } from "wagmi";
-import { injected } from "wagmi/connectors";
+import { useConnect } from "wagmi";
 import { useEffect, useRef } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -14,23 +13,20 @@ import { useMiniPayDetection } from "@/lib/minipay";
 export function Header() {
   const isMiniPay = useMiniPayDetection();
   const { connect, connectors } = useConnect();
-  const { isConnected } = useAccount();
   const attemptedRef = useRef(false);
 
-  // Auto-connect ONLY for injected wallet (window.ethereum).
-  // MetaMask SDK is NOT auto-connected — it tries deep-links that fail on desktop.
+  // Auto-connect only if injected wallet is detected (MiniPay / MetaMask extension)
   useEffect(() => {
-    if (attemptedRef.current || isConnected) return;
-    if (typeof window === "undefined") return;
-    if (!window.ethereum) return; // no injected provider — don't try
+    if (attemptedRef.current || typeof window === "undefined") return;
+    if (!window.ethereum) return;
 
     const injectedConnector = connectors.find((c) => c.id === "injected");
     if (!injectedConnector) return;
 
     attemptedRef.current = true;
-    // Silently try to connect — errors are normal (user may dismiss)
+    // Use the EXISTING connector from wagmi config, not a new instance
     connect({ connector: injectedConnector }).catch(() => {});
-  }, [connect, connectors, isConnected]);
+  }, [connect, connectors]);
 
   return (
     <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">
@@ -84,7 +80,6 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <NetworkSwitcher />
-          {/* Hide ConnectWallet on MiniPay — wallet is auto-injected */}
           {!isMiniPay && <ConnectWallet />}
         </div>
       </nav>
