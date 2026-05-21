@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { FlaskConical } from "lucide-react";
-import { useConnect } from "wagmi";
-import { injected } from "wagmi/connectors";
-import { useEffect, useState } from "react";
+import { useAccount, useConnect } from "wagmi";
+import { useEffect, useRef } from "react";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NetworkSwitcher } from "@/components/network-switcher";
@@ -13,16 +12,23 @@ import { useMiniPayDetection } from "@/lib/minipay";
 
 export function Header() {
   const isMiniPay = useMiniPayDetection();
-  const { connect } = useConnect();
-  const [autoConnected, setAutoConnected] = useState(false);
+  const { connect, connectors } = useConnect();
+  const { isConnected } = useAccount();
+  const attemptedRef = useRef(false);
 
-  // Auto-connect when inside MiniPay in-app browser
+  // Auto-connect for ALL injected wallets (MetaMask, MiniPay, browser extension, mobile)
   useEffect(() => {
-    if (isMiniPay && !autoConnected) {
-      connect({ connector: injected({ target: "metaMask" }) });
-      setAutoConnected(true);
-    }
-  }, [isMiniPay, autoConnected, connect]);
+    if (attemptedRef.current || isConnected) return;
+    if (typeof window === "undefined") return;
+
+    const injectedConnector = connectors.find(
+      (c) => c.id === "injected" || c.id === "metaMaskSDK" || c.id === "metaMask"
+    );
+    if (!injectedConnector) return;
+
+    attemptedRef.current = true;
+    connect({ connector: injectedConnector });
+  }, [connect, connectors, isConnected]);
 
   return (
     <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">

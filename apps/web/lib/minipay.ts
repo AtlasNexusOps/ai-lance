@@ -12,8 +12,8 @@ declare global {
 }
 
 /// Detects the Opera MiniPay in-app browser. When present, MiniPay auto-injects
-/// `window.ethereum.isMiniPay = true` and expects the dapp to call
-/// `eth_requestAccounts` eagerly so the user lands inside an authorised session.
+/// `window.ethereum.isMiniPay = true`. Returns true if MiniPay is detected.
+/// Connection is handled by the Header auto-connect effect — this hook only detects.
 export function useMiniPayDetection() {
   const [isMiniPay, setIsMiniPay] = React.useState(false);
 
@@ -21,10 +21,6 @@ export function useMiniPayDetection() {
     if (typeof window === "undefined") return;
     if (window.ethereum?.isMiniPay) {
       setIsMiniPay(true);
-      window.ethereum.request({ method: "eth_requestAccounts" }).catch(() => {
-        // User dismissed connection — leave isMiniPay true so the UI can still
-        // adapt (hide WalletConnect, surface a "tap your address" hint).
-      });
     }
   }, []);
 
