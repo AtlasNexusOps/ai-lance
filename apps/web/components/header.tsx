@@ -31,7 +31,7 @@ export function Header() {
     if (!injectedConnector) return;
 
     attemptedRef.current = true;
-    connect({ connector: injectedConnector }).catch(() => {});
+    connect({ connector: injectedConnector });
   }, [connect, connectors]);
 
   return (

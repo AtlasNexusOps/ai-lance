@@ -7,12 +7,18 @@ import {
   useMotionValue,
   useTransform,
   animate,
-  type Variants,
+  type TargetAndTransition,
+  type Transition,
 } from "framer-motion";
 
 // ─── Preset animation variants ───────────────────────────────────────────────
 
-const presets: Record<string, Variants> = {
+type PresetVariant = {
+  hidden: TargetAndTransition;
+  visible: TargetAndTransition & { transition?: Transition };
+};
+
+const presets = {
   fadeUp: {
     hidden: { opacity: 0, y: 32 },
     visible: {
@@ -52,7 +58,7 @@ const presets: Record<string, Variants> = {
       transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   },
-};
+} as const satisfies Record<string, PresetVariant>;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -65,7 +71,7 @@ type AnimatedSectionProps = {
   once?: boolean;
   threshold?: number;
   noScroll?: boolean;
-  variants?: Variants;
+  variants?: PresetVariant;
   as?: keyof typeof motion;
 };
 
@@ -90,31 +96,56 @@ export function AnimatedSection({
     amount: threshold,
   });
 
-  const baseVariants = customVariants ?? presets[variant];
-  const variants: Variants = staggerChildren
-    ? {
-        container: {
-          hidden: { opacity: 1 },
-          visible: {
-            opacity: 1,
-            transition: {
-              staggerChildren,
-              delayChildren: delay,
-            },
-          },
-        },
-        item: baseVariants,
-      }
-    : baseVariants;
-
   const MotionTag = motion[Tag as keyof typeof motion] as typeof motion.div;
 
+  // Case 1: Custom variants passed — use as-is
+  if (customVariants) {
+    return (
+      <MotionTag
+        ref={ref}
+        className={className}
+        variants={customVariants}
+        initial="hidden"
+        animate={noScroll ? "visible" : inView ? "visible" : "hidden"}
+      >
+        {children}
+      </MotionTag>
+    );
+  }
+
+  // Case 2: Stagger children — use container/item pattern
+  const preset = presets[variant];
+  if (staggerChildren) {
+    const containerVariants = {
+      hidden: { opacity: 1 },
+      visible: {
+        opacity: 1,
+        transition: {
+          staggerChildren,
+          delayChildren: delay,
+        },
+      },
+    };
+    return (
+      <MotionTag
+        ref={ref}
+        className={className}
+        variants={containerVariants}
+        initial="hidden"
+        animate={noScroll ? "visible" : inView ? "visible" : "hidden"}
+      >
+        {children}
+      </MotionTag>
+    );
+  }
+
+  // Case 3: Simple preset variant
   return (
     <MotionTag
       ref={ref}
       className={className}
-      variants={staggerChildren ? variants.container : variants}
-      initial={noScroll ? "visible" : "hidden"}
+      variants={preset}
+      initial="hidden"
       animate={noScroll ? "visible" : inView ? "visible" : "hidden"}
     >
       {children}
@@ -156,7 +187,6 @@ export function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px 0px" });
 
-  // Strip non-numeric except dots
   const isCurrency = value.startsWith("$");
   const raw = value.replace(/[^0-9.]/g, "");
   const target = parseFloat(raw);

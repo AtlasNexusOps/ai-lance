@@ -18,7 +18,7 @@ export function StickyCTA() {
           initial={{ y: 80, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const }}
         >
           <div className="mx-auto flex max-w-md items-center gap-3">
             <Link

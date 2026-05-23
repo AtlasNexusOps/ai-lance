@@ -17,9 +17,9 @@ export async function LiveStats() {
   try {
     const stats = await fetchLiveStats();
     snapshot = {
-      totalBountiesResolved: stats.totalBountiesResolved,
-      uniqueWorkerCount: stats.uniqueWorkerCount,
-      uniquePosterCount: stats.uniquePosterCount,
+      totalBountiesResolved: Number(stats.totalBountiesResolved),
+      uniqueWorkerCount: Number(stats.uniqueWorkerCount),
+      uniquePosterCount: Number(stats.uniquePosterCount),
       totalBountyVolume: formatCUSD(stats.totalBountyVolume),
       feeBps: (stats.feeBps ?? 200).toString(),
     };
