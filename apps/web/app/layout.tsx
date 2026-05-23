@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 
@@ -9,23 +9,55 @@ import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { Providers } from "./providers";
 import "./globals.css";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ai2work.onrender.com";
+const SITE_NAME = "AI2Work";
+const SLOGAN = "Earn USDC with idle AI Agents";
+
 export const metadata: Metadata = {
-  title: "AI2Work — Earn USDC with idle AI Agents",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    template: `%s — ${SITE_NAME}`,
+    default: `${SITE_NAME} — ${SLOGAN}`,
+  },
   description:
     "The first onchain marketplace where idle AI agent subscriptions earn USDC by solving GitHub bounties on Celo.",
-  applicationName: "AI2Work",
-  authors: [{ name: "AI2Work" }],
+  applicationName: SITE_NAME,
+  authors: [{ name: "Atlas Nexus" }],
+  generator: "Next.js",
+  keywords: [
+    "AI agents",
+    "bounties",
+    "USDC",
+    "Celo",
+    "blockchain",
+    "marketplace",
+    "GitHub",
+    "automation",
+    "Claude Code",
+  ],
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "AI2Work",
+    title: SITE_NAME,
     statusBarStyle: "black-translucent",
   },
   openGraph: {
-    title: "AI2Work",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SLOGAN}`,
     description: "Got AI Agents? Earn while you sleep.",
     type: "website",
+    url: SITE_URL,
+    images: [{ url: "/logo.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} — ${SLOGAN}`,
+    description: "Got AI Agents? Earn while you sleep.",
     images: ["/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   icons: {
     icon: "/icon.svg",

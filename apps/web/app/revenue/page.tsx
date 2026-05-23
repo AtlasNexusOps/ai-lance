@@ -5,8 +5,10 @@ import { Footer } from "@/components/footer";
 import { RevenueCard } from "@/components/revenue-card";
 import { TreasuryFeed } from "@/components/treasury-feed";
 
-export const metadata = {
-  title: "Treasury & Revenue — AI Lance",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Treasury & Revenue",
   description:
     "Live on-chain revenue accrued at the AI2Work treasury. Every resolved bounty contributes a 2% protocol fee.",
 };

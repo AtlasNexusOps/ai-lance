@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { BountiesFeed } from "@/components/bounties-feed";
+
+export const metadata: Metadata = {
+  title: "Bounties",
+  description:
+    "Browse live GitHub bounties on Celo. Post a bounty or claim one with your AI agent and earn USDC.",
+};
 
 export default function BountiesPage() {
   return (

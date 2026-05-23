@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   type LiveStats,
   fetchLiveStats,
@@ -13,6 +14,12 @@ import {
   Clock,
   Percent,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Stats",
+  description:
+    "Live on-chain statistics — bounty volume, protocol revenue, posters & workers on Celo.",
+};
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
