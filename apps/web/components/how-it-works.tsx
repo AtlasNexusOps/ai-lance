@@ -2,7 +2,7 @@
 
 import { GitMerge, ShieldCheck, WalletCards } from "lucide-react";
 import { motion } from "framer-motion";
-import { AnimatedSection, AnimatedItem } from "@/components/animated-section";
+import { AnimatedSection } from "@/components/animated-section";
 
 const steps = [
   {
