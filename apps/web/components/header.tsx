@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FlaskConical } from "lucide-react";
 import { useConnect } from "wagmi";
 import { useEffect, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NetworkSwitcher } from "@/components/network-switcher";
@@ -14,8 +15,14 @@ export function Header() {
   const isMiniPay = useMiniPayDetection();
   const { connect, connectors } = useConnect();
   const attemptedRef = useRef(false);
+  const headerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-connect only if injected wallet is detected (MiniPay / MetaMask extension)
+  const { scrollY } = useScroll();
+  const headerY = useTransform(scrollY, [0, 100], [0, -4]);
+  const opacity = useTransform(scrollY, [0, 80], [1, 0.95]);
+  const scale = useTransform(scrollY, [0, 80], [1, 0.985]);
+
+  // Auto-connect only if injected wallet is detected
   useEffect(() => {
     if (attemptedRef.current || typeof window === "undefined") return;
     if (!window.ethereum) return;
@@ -24,15 +31,24 @@ export function Header() {
     if (!injectedConnector) return;
 
     attemptedRef.current = true;
-    // Use the EXISTING connector from wagmi config, not a new instance
     connect({ connector: injectedConnector }).catch(() => {});
   }, [connect, connectors]);
 
   return (
-    <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">
+    <motion.header
+      ref={headerRef}
+      className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4"
+      style={{ y: headerY, opacity, scale }}
+    >
       <nav className="glass flex h-14 items-center justify-between rounded-full px-4 sm:h-16 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="AI2Work" className="h-8 w-8 rounded-lg" />
+          <motion.img
+            src="/logo.png"
+            alt="AI2Work"
+            className="h-8 w-8 rounded-lg"
+            whileHover={{ rotate: 8, scale: 1.08 }}
+            transition={{ type: "spring", stiffness: 400, damping: 12 }}
+          />
           <span className="hidden text-sm font-semibold tracking-tight sm:inline-flex items-center">
             AI2Work
           </span>
@@ -43,38 +59,16 @@ export function Header() {
         </Link>
 
         <ul className="hidden items-center gap-2 text-sm text-muted-foreground md:flex">
-          <li>
-            <Link
-              href="/bounties"
-              className="rounded-full px-3 py-1.5 hover:text-foreground"
-            >
-              Bounties
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/post"
-              className="rounded-full px-3 py-1.5 hover:text-foreground"
-            >
-              Post
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/stats"
-              className="rounded-full px-3 py-1.5 hover:text-foreground"
-            >
-              Stats
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/install"
-              className="rounded-full px-3 py-1.5 hover:text-foreground"
-            >
-              Install
-            </Link>
-          </li>
+          {["Bounties", "Post", "Stats", "Install"].map((label) => (
+            <li key={label}>
+              <Link
+                href={`/${label.toLowerCase()}`}
+                className="relative rounded-full px-3 py-1.5 hover:text-foreground transition-colors"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         <div className="flex items-center gap-2">
@@ -83,6 +77,6 @@ export function Header() {
           {!isMiniPay && <ConnectWallet />}
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }

@@ -17,7 +17,7 @@ export const GlassCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<H
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("glass rounded-3xl p-6 sm:p-8 animate-fade-in", className)}
+      className={cn("glass rounded-3xl p-6 sm:p-8", className)}
       {...props}
     />
   ),
