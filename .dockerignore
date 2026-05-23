@@ -1,0 +1,15 @@
+**/node_modules
+**/.next
+**/.turbo
+**/.cache
+.git
+.github
+*.md
+CLAUDE.md
+.env
+.env.*
+contracts
+solana
+scripts
+*.log
+.DS_Store
