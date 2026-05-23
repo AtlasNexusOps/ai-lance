@@ -7,9 +7,13 @@ app = "ai2work"
   NODE_ENV = "production"
   NEXT_TELEMETRY_DISABLED = "1"
 
+[processes]
+  app = "pnpm --filter @atlasnexus/ai2work-web start"
+
 [[services]]
   internal_port = 3000
   protocol = "tcp"
+  processes = ["app"]
 
   [[services.ports]]
     port = 80
