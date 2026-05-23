@@ -8,8 +8,6 @@
 CLAUDE.md
 .env
 .env.*
-contracts
-solana
 scripts
 *.log
 .DS_Store

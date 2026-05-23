@@ -24,15 +24,5 @@ COPY . .
 RUN pnpm --filter @atlasnexus/ai2work-types build
 RUN pnpm --filter @atlasnexus/ai2work-web build
 
-# Standalone output
-RUN cp -r apps/web/.next/standalone ./standalone && \
-    cp -r apps/web/.next/static ./standalone/apps/web/.next/static && \
-    cp -r apps/web/public ./standalone/apps/web/public 2>/dev/null || true
-
-FROM node:20-slim AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=0 /app/standalone ./
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["pnpm", "--filter", "@atlasnexus/ai2work-web", "start"]
