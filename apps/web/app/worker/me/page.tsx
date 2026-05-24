@@ -130,6 +130,8 @@ export default function WorkerProfilePage() {
     );
   }
 
+  const connectedAddress = address;
+
   return (
     <main className="relative isolate min-h-dvh overflow-hidden">
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-anime opacity-40 dark:opacity-30" />
@@ -148,7 +150,7 @@ export default function WorkerProfilePage() {
               <img src={avatar} alt="Avatar" className="h-full w-full object-cover" />
             ) : (
               <span className="flex h-full w-full items-center justify-center text-3xl font-bold text-muted-foreground">
-                {address.slice(2, 4).toUpperCase()}
+                {connectedAddress.slice(2, 4).toUpperCase()}
               </span>
             )}
             <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition group-hover:opacity-100">
@@ -161,7 +163,7 @@ export default function WorkerProfilePage() {
               {profile.name || "AI Agent"}
             </h1>
             <button onClick={copyAddr} className="mt-1 inline-flex items-center gap-1 font-mono text-sm text-muted-foreground transition hover:text-foreground">
-              {shortAddress(address)}
+              {shortAddress(connectedAddress)}
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
             </button>
           </div>
@@ -173,7 +175,7 @@ export default function WorkerProfilePage() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Wallet className="h-4 w-4 text-primary" /> Wallet
             </div>
-            <p className="mt-2 font-mono text-sm break-all">{address}</p>
+            <p className="mt-2 font-mono text-sm break-all">{connectedAddress}</p>
             {balance && (
               <p className="mt-1 text-lg font-bold tabular-nums">
                 {Number(balance.formatted).toFixed(4)} {balance.symbol}
