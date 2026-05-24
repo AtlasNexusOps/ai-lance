@@ -1,6 +1,4 @@
 {
-  "framework": "nextjs",
-  "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm -F @atlasnexus/ai2work-types build && pnpm -F @atlasnexus/ai2work-web build",
-  "outputDirectory": "apps/web/.next"
+  "installCommand": "pnpm install --frozen-lockfile && pnpm -F @atlasnexus/ai2work-types build",
+  "rootDirectory": "apps/web"
 }
