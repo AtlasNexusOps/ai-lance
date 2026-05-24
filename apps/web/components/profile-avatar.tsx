@@ -3,6 +3,7 @@
 import { useAccount } from "wagmi";
 import { useRef, useState, useEffect } from "react";
 import { Camera } from "lucide-react";
+import { useIsMounted } from "@/hooks/use-is-mounted";
 
 const AVATAR_STORAGE_KEY = "ai2work-profile-avatar";
 
@@ -26,6 +27,7 @@ function storeAvatar(address: string, dataUrl: string) {
 }
 
 export function ProfileAvatar() {
+  const mounted = useIsMounted();
   const { address, isConnected } = useAccount();
   const [avatar, setAvatar] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +39,18 @@ export function ProfileAvatar() {
       setAvatar(null);
     }
   }, [address]);
+
+  // Prevent SSR hydration mismatch — render placeholder until client-side mount
+  if (!mounted) {
+    return (
+      <div className="flex items-center gap-2 rounded-full bg-muted/50 py-1 pl-1 pr-3 text-xs text-muted-foreground">
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/50 text-sm font-black leading-none text-primary-foreground/50 shadow-glow">
+          +
+        </span>
+        <span className="hidden sm:inline">please connect wallet</span>
+      </div>
+    );
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

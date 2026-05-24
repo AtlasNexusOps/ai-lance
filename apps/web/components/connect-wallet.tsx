@@ -3,8 +3,10 @@
 import { useAccount, useConnect, useDisconnect, useBalance } from "wagmi";
 import { Wallet, LogOut, Copy, Check } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useIsMounted } from "@/hooks/use-is-mounted";
 
 export function ConnectWallet() {
+  const mounted = useIsMounted();
   const { address, isConnected, chain } = useAccount();
   const { connect, connectors, error: wagmiError } = useConnect();
   const { disconnect } = useDisconnect();
@@ -62,6 +64,22 @@ function getHelpfulError(rawError: string | undefined): string {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  // Prevent SSR hydration mismatch — render placeholder until client-side mount
+  if (!mounted) {
+    return (
+      <div className="flex flex-col items-end gap-1">
+        <button
+          disabled
+          className="inline-flex items-center gap-2 rounded-full bg-primary/50 px-4 py-2 text-sm font-semibold text-primary-foreground/50"
+        >
+          <Wallet className="h-4 w-4" />
+          <span className="hidden sm:inline">Connect Wallet</span>
+          <span className="sm:hidden">Connect</span>
+        </button>
+      </div>
+    );
+  }
 
   if (!isConnected) {
     return (
