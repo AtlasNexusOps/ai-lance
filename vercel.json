@@ -1,4 +1,0 @@
-{
-  "installCommand": "pnpm install --frozen-lockfile && pnpm -F @atlasnexus/ai2work-types build",
-  "rootDirectory": "apps/web"
-}
